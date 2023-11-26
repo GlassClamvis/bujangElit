@@ -1,0 +1,3937 @@
+REVIEW
+published: 10 November 2020
+doi: 10.3389/fphy.2020.589504
+
+Qudits and High-Dimensional
+Quantum Computing
+Yuchen Wang 1,2, Zixuan Hu 1,2, Barry C. Sanders 3 and Sabre Kais 1,2*
+1
+Department of Chemistry, Purdue University, West Lafayette, IN, United States, 2Department of Physics and Purdue Quantum
+Science and Engineering Institute, Purdue University, West Lafayette, IN, United States, 3Institute for Quantum Science and
+Technology, University of Calgary, Calgary, AB, Canada
+
+Qudit is a multi-level computational unit alternative to the conventional 2-level qubit.
+Compared to qubit, qudit provides a larger state space to store and process information,
+and thus can provide reduction of the circuit complexity, simpliﬁcation of the experimental
+setup and enhancement of the algorithm efﬁciency. This review provides an overview of
+qudit-based quantum computing covering a variety of topics ranging from circuit building,
+algorithm design, to experimental methods. We ﬁrst discuss the qudit gate universality and
+a variety of qudit gates including the pi/8 gate, the SWAP gate, and the multi-level
+controlled-gate. We then present the qudit version of several representative quantum
+algorithms including the Deutsch-Jozsa algorithm, the quantum Fourier transform, and the
+phase estimation algorithm. Finally we discuss various physical realizations for qudit
+computation such as the photonic platform, iron trap, and nuclear magnetic resonance.
+Keywords: quantum information, quantum computing, qudit gates, qudit algorithm, qudit implementation
+Edited by:
+Marcelo Silva Sarandy,
+Fluminense Federal University, Brazil
+Reviewed by:
+Eduardo Duzzioni,
+Federal University of Santa Catarina,
+Brazil
+Jun Jing,
+Zhejiang University, China
+*Correspondence:
+Sabre Kais
+kais@purdue.edu
+Specialty section:
+This article was submitted to
+Quantum Computing,
+a section of the journal
+Frontiers in Physics
+Received: 03 August 2020
+Accepted: 22 September 2020
+Published: 10 November 2020
+Citation:
+Wang Y, Hu Z, Sanders BC and Kais S
+(2020) Qudits and High-Dimensional
+Quantum Computing.
+Front. Phys. 8:589504.
+doi: 10.3389/fphy.2020.589504
+
+Frontiers in Physics | www.frontiersin.org
+
+INTRODUCTION
+Qudit technology, with a qudit being a quantum version of d-ary digits for d > 2 [23]; is emerging as
+an alternative to qubit for quantum computation and quantum information science. Due to its multilevel nature, qudit provides a larger state space to store and process information and the ability to do
+multiple control operations simultaneously [106]. These features play an important role in the
+reduction of the circuit complexity, the simpliﬁcation of the experimental setup and the
+enhancement of the algorithm efﬁciency [100, 106, 108, 109]. The advantage of the qudit not
+only applies to the circuit model for quantum computers but also applies to adiabatic quantum
+computing devices [5, 166]; topological quantum systems [16, 37, 38] and more. The qudit-based
+quantum computing system can be implemented on various physical platforms such as photonic
+systems [60, 106]; continuous spin systems [2, 11]; ion trap [91]; nuclear magnetic resonance [48, 62]
+and molecular magnets [99].
+Although the qudit system’s advantages in various applications and potentials for future
+development are substantial, this system receives less attention than the conventional qubitbased quantum computing, and a comprehensive review of the qudit-based models and
+technologies is needed. This review article provides an overview of qudit-based quantum
+computing covering a variety of topics ranging from circuit building [39, 61, 71, 89, 133];
+algorithm designs [2, 17, 26, 62, 79, 119, 121]; to experimental methods [2, 11, 48, 60, 62, 91,
+99, 106]. In this article, high-dimensional generalizations of many widely used quantum gates are
+presented and the universality of the qudit gates is shown. Qudit versions of three major classes of
+quantum algorithms—algorithms for the oracles decision problems (e.g., the Deutsch-Jozsa
+algorithm [121], algorithms for the hidden non-abelian subgroup problems (e.g., the phaseestimation algorithms (PEAs) [26] and the quantum search algorithm (e.g., Grover’s algorithm
+
+1
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+section, Section 2.3, a quantitative discussion of the circuit
+efﬁciency is included to give a boundary of the number of
+elementary gates needed for decomposing an arbitrary unitary
+matrix.
+
+[79]—are discussed and the comparison of the qudit designs vs.
+the qubit designs is analyzed. Finally, we introduce various
+physical platforms that can implement qudit computation and
+compare their performances with their qubit counterparts.
+Our article is organized as follows. Deﬁnitions and properties
+of a qudit and related qudit gates are given in Section 2. The
+generalization of the universal gate set to qudit systems and
+several proposed sets are provided in Section 2.1. Then Section
+2.2 lists various examples of qudit gates and discusses the
+difference and possible improvement of these gates over their
+qubit counterparts. A discussion of the gate efﬁciency of
+synthesizing an arbitrary unitary U using geometric method is
+given in Section 2.3. The next section, Section 3, provides an
+introduction to qudit algorithms: a single-qudit algorithm that
+ﬁnds the parity of a permutation in Section 3.1.1, the DeutschJosza algorithm in Section 3.1.2, the Bernstein-Vazirani
+algorithm in Section 3.1.3, the quantum Fourier transform in
+Section 3.2.1, the PEA in Section 3.2.2 and the quantum search
+algorithm in Section 3.3. Section 4 is a section focused on the
+qudit quantum computing models other than the circuit model,
+which includes the measurement-based model in Section 4.1, the
+adiabatic quantum computing in Section 4.2 and the topological
+quantum computing in Section 4.3. In Section 5, we provide
+various realizations of the qudit algorithms on physical platforms
+and discuss their applications. We discuss possible improvements
+in computational speed-up, resource saving and implementations
+on physical platforms. A qudit with a larger state space than a
+qubit can utilize the full potential of physical systems such as
+photon in Section 5.1, ion trap in Section 5.2, nuclear magnetic
+resonance in Section 5.3 and molecular magnet in Section 5.4.
+Finally, we give a summary of the qudit systems advantages and
+provide our perspective for the future developments and
+applications of the qudit in Section 6.
+
+2.1 Criteria for Universal Qudit Gates
+This subsection describes the universal gates for qudit-based
+quantum computing and information processing. We elaborate
+on the criteria for universality in Section 2.1.1 and give examples
+in Section 2.1.2.
+
+2.1.1 Universality
+In quantum simulation and computation, a set of matrices
+Uk ∈ U(d n ) is called the universal quantum gate set if the
+product of its elements can be used to approximate any
+arbitrary unitary transformation U of the Hilbert space H⊗n
+d
+with acceptable error measured in some appropriate norm [153].
+This idea of universality not only applies to the qubit systems
+[47]; but can also be extended to the qudit logic [24, 39, 65, 102,
+114, 164]. Several discussions of standards and proposals for a
+universal qudit gate set exist. Vlasov shows that the combination
+of two noncommuting single qudit gates and a two-qudit gate are
+enough to simulate any unitary U ∈ U(d n ) with arbitrary
+precision [153]. Qudit gates can themselves be reduced to, and
+thus simulated by, sequences of qudit gates of lower-dimensional
+qudit gates [135, 137] Brylinski and Brylinski prove a set of
+sufﬁcient and necessary conditions for exact qudit universality
+which needs some random single qudit gates complemented by
+one two-qudit gate that has entangled qudits [23]. Exact
+universality implies that any unitary gate and any quantum
+process can be simulated with zero error. Neither of these
+methods is constructive and includes a method for physical
+implementation. A physically workable procedure is given by
+Muthukrishnan and Stroud using single- and two-qudit gates to
+decompose an arbitrary unitary gate that operates on N qudits
+[118]. They use the spectral decomposition of unitary
+transformations and involve a gate library with a group of
+continuous parameter gates. Brennen et al. [21] identify criteria
+for exact quantum computation in qudit that relies on the QR
+decomposition of unitary transformations. They generate a library
+of gates with a ﬁxed set of single qudit operations and “one
+controlled phase” gate with single parameter as the components
+of the universal set. Implementing the concept of a coupling graph,
+they proved that by connecting the nodes (equivalently logical basis
+states) they can show the possibility of universal computation.
+
+2 QUANTUM GATES FOR QUDITS
+A qudit is a quantum version of d-ary digits whose state can be
+described by a vector in the d dimensional Hilbert space Hd [23].
+The space is spanned by a set of orthonormal basis vectors
+{|0〉, |1〉, |2〉, . . . |d − 1〉}. The state of a qudit has the general form
+α0
+⎜
+⎟
+⎛
+⎞
+⎜
+α
+1 ⎟
+⎜
+⎟
+⎜
+⎟
+⎜
+⎟
+⎜
+d
+⎜
+⎟
+⎟
+α2 ⎟
+|α〉  α0 |0〉 + α1 |1〉 + α2 |2〉 + / + αd−1 |d − 1〉  ⎜
+⎟∈C
+⎜
+⎜
+⎜
+⎟
+⎝ « ⎟
+⎠
+αd−1
+(1)
+ 2  2  2
+
+2
+where α0 | + α1 | + α2 | + / + αd−1 |  1. Qudit can replace
+qubit as the basic computational element for quantum
+algorithms. The state of a qudit is transformed by qudit gates.
+This section gives a review of various qudit gates and their
+applications. Section 2.1 provides criteria for the qudit
+universality and introduces several fundamental qudit gate
+sets. Section 2.2 presents examples of qudit gates and
+illustrates their advantages compared to qubit gates. In the last
+
+Frontiers in Physics | www.frontiersin.org
+
+2.1.2 Examples of Universal Gate Sets
+An explicit and physically realizable universal set comprising
+one-qudit general rotation gates and two-qudit controlled
+extensions of rotation gates is explained in this section [108].
+We ﬁrst deﬁne
+d−1
+
+Ud (α) :
+
+αl |l〉1|d − 1〉, α : (α0 , α1 , . . . , αd−1 ).
+
+(2)
+
+l0
+
+as a transformation in the d-dimension that maps any given qudit
+state to |d − 1〉. Complex parameters of Ud may not be unique
+
+2
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+and have been addressed with probabilistic quantum search
+algorithm [118]. Here in this scheme, Ud can be
+deterministically
+decomposed
+into
+d−1
+unitary
+transformations such that
+Ud  Xd(d−1) (ad−1 , bd−1 )/Xd(1) (a1 , b1 ), al : αl , bl :
+
+l−1
+
+α2i
+l0
+
+(3)
+with
+⎜
+⎛
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+(l)
+⎜
+⎜
+Xd x, y  ⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎜
+⎝
+
+1l−1
+x
+
+   
+ 2  2
+x + y
+
+−y
+   
+ 2  2
+x + y
+
+y*
+   
+ 2  2
+x + y
+
+x*
+   
+ 2  2
+x + y
+
+⎟
+⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟.
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎠
+
+FIGURE 1 | The schematic circuit of Cm [Rd ] with C2 [Rd ] and
+C2 [Pd (p, q)]. The horizontal lines represent qudits. The auxiliary qudits
+initialized to |0〉 is denoted by the red lines and the black lines denoting m
+controlling qudits. The two-qudit controlled gates is shown as the
+verticle lines. Pd (p, q) is the permutation of |p〉 and |q〉 state, and Rd is either
+Xd(l) or Zd .
+
+(4)
+
+1d−l−1
+
+Here Uj,N and Zj,N are the N-dimensional analogues of Ud and Zd
+such that Uj,N is applied to the jth eigenstate to produce |N − 1〉
+and Zj,N modiﬁes the phase of |N − 1〉 by the jth eigenphase λj ,
+while ignoring all the other computation states. According to Eq.
+(l)
+(x, y). Thus,
+3, Uj,N can be decomposed with primitive gates Xj,N
+Xj,N (x, y) and Zj,N are sufﬁcient to decompose U.
+The second step is decomposing Uj,N and Zj,N . In other words,
+Uj,N and Zj,N need to be decomposed in terms of multi-quditcontrolled gates. For convenience denote Cm [Rd ] as
+
+The d-dimensional phase gate is
+d−1
+
+Zd (θ) :
+
+ei(1−sgn(d−1−l))θ |l〉〈l|,
+
+(5)
+
+l0
+
+which changes |d − 1〉 by a phase θ and ignores the other states,
+and sgn represents the sign function.
+Each primitive gate (such as Xd(l) or Zd ) has two free complex
+parameters to be controlled (x, y in the Xd(l) gate and θ in the Zd
+gate). Let Rd represents either Xd(l) or Zd , then the controlledqudit gate is
+12
+C2 [Rd ] :  d −d
+
+Rd
+
+,
+
+1m
+Cm [Rd ]   d −d
+
+N
+
+
+ N
+eiλj Ej 〉〈Ej   Yj
+
+j1
+
+Γd : Xd(l) , Zd , C2 [Rd ]
+
+N
+
+j1
+
+ei(1−|sgn(j−s)|)λs |Es 〉〈Es |.
+
+(8)
+
+s1
+
+Then the eigenoperators can be synthesized with two basic
+transformations as [118].
+−1
+Zj,N Uj,N .
+Yj  Uj,N
+
+Frontiers in Physics | www.frontiersin.org
+
+(10)
+
+(11)
+
+is universal for the quantum computation using qudit systems.
+One advantage of the qudit model (compared to the qubit
+model) is a reduction of the number of qudits required to span the
+state space. To explain this, we need at least n1  log2 N qubits to
+represent an N-dimensional system in qubits while in qudits we
+need n2  logd N qudits. The qudit system has a reduction factor
+k  n1 /n2  log2 d. According to Muthukrishnan and Stroud’s
+method in Ref. 118 a binary equivalent of their construction
+requires a number of qubit gates in the scale of O(n21 N 2 ). By
+analogy, the scale of the required qudit gates using the same
+construction is O(n22 N 2 ). So the qudit method has a (log2 d)2
+scaling advantage over the qubit case. Furthermore, in this
+
+(7)
+
+with eigenoperators
+Yj 
+
+,
+
+which acts on the dm -dimensional computational basis of
+m-qudit space. It is proved in the appendix of Ref. 108 that
+each Uj,N can be decomposed into some combinations of Cm [R d ]
+
+
+and Cm [Pd (p, q)] where Pd (p, q) is the permutation of p〉 and q〉
+state. The third step is using the two-qudit gates C2 [Rd ] and
+C2 [Pd (p, q)] to complete the decomposition of Cm [Rd ]. Figure 1
+shows a possible decomposition for d > 2. There are
+r  (m − 2)/(d − 2) auxiliary qudits in the circuits (x denotes
+the smallest integer greater than x). The last box contains Rd  Zd
+or Xd(l) . Cm [Rd ] is implemented with these gates combined. All of
+the three steps together prove that the qudit gates set
+
+(6)
+
+which is a d 2 × d 2 matrix that acts on two qudits. Rd acts on d
+substates |d − 1〉|0〉, . . . , |d − 1〉|d − 1〉, and the identity
+operation 1d2 −d acts on the remaining substates.
+Now we work on an N  dn dimensional unitary gate
+U ∈ SU(dn ) operating on the n-qudit state. The sufﬁciency of
+the gates Xd(l) , Zd and C2 [Rd ] to construct an arbitrary unitary
+transformation of SU(dn ) is proved in three steps. The ﬁrst step is
+the eigen-decomposition of U. By the representation theory, the
+unitary matrix U with N eigenvalues {λs } and eigenstates |Es 〉 can
+be rewritten as
+U
+
+Rd
+
+(9)
+
+3
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+FIGURE 2 | (A) is the qudit SWAP circuit using CXd and Kd gates [58, 131]. (B) is the qudit SWAP circuits with the CXd , the CXd† and the Kd gates.
+
+reviewed method, for an arbitrary unitary U ∈ SU(N), from Eqs
+7 and 8 N eigenoperators is needed and each can be decomposed
+with three rotations shown in Eq. 9. Deriving from the appendix
+of Ref. 108; Uj,N can be decomposed with less than 3dn−1 multiple
+controlled operations. Finally, as Figure 1 has shown, Cm [Rd ]
+needs m number of C2 [Rd ] and C2 [Pd (p, q)]. Ud can be composed
+with d − 1 numbers of Xd(l) as in Eq. 3. Therefore the total number
+of primitive operations L in this decomposition method is
+L ≤ 2N × 3d n−1 × n × (d − 1) + N × n ≤ 6nd2n + ndn .
+
+{P[0]3 , P[1]3 , P[2]3 }. As an analogue of the standard
+universal set for qubit {CNOT, H, T  π/8 − gate}, the qutrit
+set generate the qutrit Clifford group whereas the qubit set
+generate the qubit Clifford group (the deﬁnition of the Clifford
+group can be found in Section 2.2.1). Whereas the rigorous
+proof can be found in Ref. 38; the proving process follows the
+idea introduced in Ref. 23 that the gate SUM3 is imprimitive,
+and the Hadamard H3 and any gate from {P[0]3 , P[1]3 , P[2]3 }
+generates a dense subgroup of SU(3). Similarly, the proposed
+gate set for the qupit system is the sum gate SUMp , the
+Hadamard gate Hp and the gates Q[i]p for i ∈ [p − 1]. The
+proof is analogous to that of the qutrit set. The Hadamard
+Hp and the Q[i] gates are combined to form a dense subgroup of
+SU(p) and SUMp is shown to be imprimitive. Implementing
+Theorem 1.3 in Ref. 23; the set is a universal gate set. These
+universal gate sets for the qudit systems, with fewer numbers of
+gates in each set compare to that in the previous examples, have
+the potential to perform qudit quantum algorithms on the
+topological quantum computer.
+
+(12)
+
+It is clear that there is an extra factor of n reduction in the gate
+requirement as the number scale of this method is O(nN 2 ). The
+other advantage is these primitive qudit gates can be easily
+implemented with fewer free parameters [108].
+For qudit quantum computing, depending on the
+implementation platform, other universal quantum gate sets
+can be considered. For example, in a recent proposal for
+topological quantum computing with metaplectic anyons, Cui
+and Wang prove a universal gates set for qutrit and qupit systems,
+for a qupit being a qudit with p dimensions and p is an prime
+number larger than 3 [38]. The proposed universal set is a qudit
+analogy of the qubit universal set and it consists several
+generalized qudit gates from the universal qubit set.
+The generalized Hadamard gate for qudits Hd is
+
+1 d−1 ij
+Hd j〉  √
+ω |i〉, j ∈ {0, 1, 2, . . . , d − 1},
+d i0
+
+(13)
+
+ω : e2πi/d.
+
+(14)
+
+2.2 Examples of Qudit Gates
+In this section we introduce the qudit versions of many important
+quantum gates and discuss some of the gates’ advantages
+compared to their qubit counterparts. The gates discussed are
+the qudit versions of the π/8 gate in Section 2.2.1, the SWAP gate
+in Section 2.2 and the multi-level controlled gate in Section 2.2
+In Section 2.2.3, we also introduce how to simplify the qubit
+Toffoli gate by replacing one of the qubit to qudit. This gives ideas
+about improving the qubit circuits and gates by introducing
+qudits to the system.
+
+where
+
+2.2.1 Qudit Versions π/8 Gate
+The qubit π/8 gate T has an important role in quantum
+computing and information processing. This gate has a wide
+range of applications because it is closely related to the Clifford
+group but does not belong to the group. From the GottesmanKnill theorem [64] it is shown that the Clifford gates and Pauli
+measurements only do not guarantee universal quantum
+computation (UQC). The π/8 gate, which is non-Clifford and
+from the third level of the Clifford hierarchy, is the essential gate
+to obtaining UQC [20]. This gate can be generalized to a d
+dimensional qudit system, where, throughout the process, d is
+assumed to be a prime number greater than 2 [71].
+To deﬁne the Clifford group for a d-dimensional qudit space,
+we ﬁrst deﬁne the Pauli Z gate and Pauli X gate. The Pauli Z gate
+and Pauli X gate are generalized to d dimension in the matrix
+forms [11, 67, 124, 130].
+
+The SUMd gate serves as a natural generalization of the CNOT
+gate
+SUMd |i, j〉  |i, i + j(modd)〉, i, j ∈ {0, 1, 2, . . . , d − 1}.
+
+(15)
+
+The Pauli σ z , with the π/8 gate as its 4th root, can be generalized to
+Q[i] gates for qudits,
+
+
+Q[i]d j〉  ωδij j〉,
+
+(16)
+
+with ω deﬁned by Eq. 14 and the related P[i] gates are
+
+δ 
+P[i]d j〉  −ω2  ij j〉, i, j ∈ {0, 1, 2, . . . , d − 1}.
+
+(17)
+
+In general Q[i]p is always a power of P[i]p if p is an odd prime.
+The proposed gate set for the qutrit system is the sum gate
+SUM3 , the Hadamard gate H3 and any gate from the set
+
+Frontiers in Physics | www.frontiersin.org
+
+4
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+0
+⎜
+⎛
+⎜
+1
+⎜
+⎜
+⎜
+⎜
+⎜
+0
+Xd  ⎜
+⎜
+⎜
+⎜
+⎜
+⎝«
+0
+
+0
+0
+1
+«
+0
+
+/
+/
+/
+1
+/
+
+0
+0
+0
+«
+1
+
+1
+1
+⎟
+⎜
+⎛
+⎟
+⎜
+0⎞
+0
+⎟
+⎜
+⎟
+⎜
+⎟
+⎜
+⎟
+⎜
+⎟
+⎜
+, Zd  ⎜
+0⎟
+0
+⎜
+⎟
+⎜
+⎟
+⎜
+⎠
+⎝«
+«⎟
+0
+0
+
+0
+ω
+0
+«
+0
+
+0
+0
+ω2
+«
+0
+
+/
+/
+/
+1
+/
+
+0
+0
+0
+0
+
+d−1
+
+⎝
+det⎛
+
+⎟
+⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎟
+⎠
+
+⎨ τ 2αc ,
+⎧
+⎩
+1,
+
+⎜
+⎛
+⎜
+⎜
+⎜
+det⎜
+⎜
+⎜
+⎝C
+
+(20)
+
+d−1
+
+(21)
+
+(30)
+
+A straightforward application of Eqs 20 and 30 yields
+Uυ D(x|z) Uυ†  D(x|z)
+
+ωυk+1 −υk |k〉〈k|.
+
+(31)
+
+k
+
+As Uυ is to be a member of C3 , the right hand side of Eq. 31 must
+be a Clifford gate. We ignore the trivial case Uυ D(0|z) Uυ†  D(0|z)
+and focus on the case Uυ D(1|0) Uυ† in order to derive an explicit
+expression for Uυ .
+We deﬁne c′ , z ′ , ε′ ∈ Zd such that
+
+(22)
+
+Uυ D(1|0) Uυ†  ωε′ C 1
+ ′
+c
+
+(23)
+
+
+0  1
+ z′ 
+1
+
+(32)
+
+From Eqs 26 and 31 we see that the right-hand side of Eq. 32 is
+the most general form, and we note that U ∈ SU(d) implies
+′
+ωc U ∈ SU(d). We rewrite the left-hand side of Eq. 32 using Eq.
+31 and right-hand side using Eq. 26 and obtain
+D(1|0)
+
+(24)
+
+k
+
+ωυk+1 −υk |k〉〈k|  ωε′ D(1|z′ )
+
+d−1
+
+τ c′ k |k〉〈k|.
+2
+
+(33)
+
+k0
+
+After canceling common factors of D(1|0) , an identity between two
+diagonal matrices remains such that
+
+is
+(25)
+
+ωυk+1 −υk  ωε′ τ z′ ωkz′ τ c′ k (∀k ∈ Zd ),
+2
+
+d−1
+
+(34)
+
+or, equivalently, using Eq. 20,
+υk+1 − υk  ε′ + 2−1 z ′ + kz′ + 2−1 c′ k2 .
+
+(26)
+
+(35)
+
+From here, we derive the recursive relation
+
+k0
+
+υk+1  υk + k 2−1 c′ k + z′  + 2−1 z ′ + ε′ .
+
+The special case β  0 is particularly relevant to the later
+derivation, and
+
+Frontiers in Physics | www.frontiersin.org
+
+(29)
+
+k0
+
+for C1 the Pauli group [66]. The sets Ck ≥ 3 do not form groups,
+although the diagonal subsets of C3 , which is our focus here, do
+form a group.
+The following derivations follow those in Ref. 71. The explicit
+formula for building a Clifford unitary gate with
+
+⎪
+⎧
+1
+−1
+2
+2
+⎪
+⎪
+√
+τ β (αk −2jk+δj ) |j〉〈k|, β ≠ 0
+⎪
+⎪
+⎪ d j,k0
+⎨
+VF  ⎪
+⎪
+d−1
+⎪
+2
+⎪
+⎪
+⎪
+τ αck |αk〉〈k|,
+β  0.
+⎩
+
+ωυk |k〉〈k|(υk ∈ Zd ).
+
+Uυ  U(υ0 , υ1 , . . . ) 
+
+A recursively deﬁned set of gates, the so-called Clifford hierarchy,
+was introduced by Gottesman and Chuang as
+
+C →  D(x|z) VF ,
+F χ 
+
+⎟
+⎞
+⎟
+⎟
+2c
+⎟
+⎟
+
+⎟
+⎠  τ for p  3.
+
+1 0  x ⎟
+ 
+!
+c 1  z
+
+With all the mathematical deﬁnitions at hand, we are ready to
+give an explicit form of the qudit π/8 gate. We choose the qudit
+gate Uυ to be diagonal in the computational basis and claim that,
+for d > 3, Uυ has the form
+
+χ is a two-vector with elements from Zd . With these
+where →
+preliminary concepts deﬁned in Eqs. 18-21, we now deﬁne the
+Clifford group as the following: the set of the operators that maps
+the Weyl-Heisenberg group onto itself under conjugation is called
+the Clifford group [124, 157];
+
+x
+α β
+→
+F
+ ∈ SL(2, Zd ), χ    ∈ Z2d
+z
+c δ
+
+(28)
+
+and
+
+where (x|z) correspond to the x and y in the exponent of τ, X and
+Z. This leads to the deﬁnition of the Weyl-Heisenberg group (or
+the generalized Pauli group) for a single qudit as [11, 67, 124,
+130].
+
+
+Ck+1  U UC1 U † 4Ck ,
+
+∀ d > 3,
+
+∈ SU p ∀ p > 3
+C 1 0 
+ xz 
+
+c 1
+
+In general, we deﬁne the displacement operators as products of
+the Pauli operators,
+
+
+C  C ∈ U(d)CGC†  G.
+
+(27)
+
+d  3,
+
+can be shown. In the d  3 case, we use
+
+for ω the d th root of unity Eq. 14. The function of the Z gate is
+adding different phase factors to each basis states and that of the X
+gate is shifting the basis state to the next following state. Using
+basis states the two gates are
+
+
+
+
+(19)
+Zd j〉 : ωj j〉 Xd j〉 : j〉 + 1, j ∈ {0, 1, 2, . . . , d − 1}
+
+
+→
+χ ∈ Z2d , c ∈ Zd  (Zd  {0, 1, . . . , d − 1}),
+G  τ c D→
+χ 
+
+2
+
+k0
+
+ωd− 1
+(18)
+
+D(x|z)  τ xz Xdx Zdz , τ : e(d+1)πi/d ,
+
+αc
+
+⎠  τ 6 (2d−1)(d− 1)d ,
+τ αck |k〉〈k|⎞
+
+(36)
+
+We solve for the υk with a boundary condition υ0  0,
+
+5
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+Then the general solution is
+υ  0, 6z ′ + 2c′ + 3ε′ , 6z′ + c′ + 6ε′ mod9.
+
+(43)
+
+For example, choosing z ′  1, c′  2 and ε′  0,
+ω0
+⎜
+⎝ 0
+Uυ  ⎛
+0
+
+FIGURE 3 | Qudit SWAP circuits with the GXOR and the Kd gates [4,
+155].
+
+υk 
+
+1
+kc′ + k"6z′ + (2k − 3)c′ # + kε′ ,
+12
+
+where all factors are evaluated modulo d. For example, with d  5,
+the ﬁfth root of unity Eq. 14 is ω  e2πi/5 and choosing z’  1, c’ 
+4 and ε’  0, we obtain
+(38)
+
+ω0
+⎜
+⎛
+⎜
+0
+⎜
+⎜
+⎜
+⎜
+⎜
+Uυ  ⎜
+0
+⎜
+⎜
+⎜
+⎜
+⎝ 0
+0
+
+(39)
+
+so that
+0
+ω−2
+0
+0
+0
+
+0
+0
+ω−1
+0
+0
+
+0
+0
+0
+ω2
+0
+
+0
+⎟
+⎟
+0 ⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+0 ⎟
+⎟
+⎟
+⎟
+⎠
+0 ⎟
+1
+ω
+
+d−1
+
+⎠  10ϕ  4πc/9.
+τ ck |k〉〈k|⎞
+2
+
+(44)
+
+2.2.2 Qudit SWAP Gate
+A SWAP gate is used to exchange the states of two qudit such that:
+SWAP|ϕ〉|ψ〉  |ψ〉|ϕ〉
+
+The diagonal elements of Uυ are powers of ω that sum to zero
+modulo d and, consequently, det(Uυ )  1.
+For the d  3 case, because of Eq. 27 extra work is needed for
+solving a matrix equation similar to Eq. 32. We ﬁrst introduce a
+global phase factor eiϕ such that
+⎝eiϕ
+det⎛
+
+0
+⎟
+⎠.
+0 ⎞
+−1
+ω
+
+The π/8 gate, with its close relation to the Clifford group, has
+many applications and utilities in teleportation-based UQC [66];
+transversal implementation [50, 162]; learning an unknown gate
+[105]; or securing assisted quantum computation [28]. The
+generalized qudit version of the π/8 gate, Uυ , is shown to be
+identical to the maximally robust qudit gates for qudit faulttolerant UQC discussed in reference [150].
+This gate also plays an important role in the magic-state
+distillation (MSD) protocols for general qudit systems, which
+was ﬁrst established for qutrits [6] and then extended to all primedimensional qudits [25].
+
+(37)
+
+υ  (υ0 , υ1 , υ2 , υ3 , υ4 )  (0, 3, 4, 2, 1)
+
+0
+ω1
+0
+
+(45)
+
+Various methods to achieve the SWAP gate use different variants
+of qudit controlled gates [4, 58, 112, 131, 155, 158, 159] as shown
+in Figure 2A,B. The most used component of the SWAP gate is a
+controlled-shift gate CXd that perform the following operation:
+CXd |x〉|y〉  |x〉|x + y〉
+
+(40)
+
+k0
+
+(46)
+
+with a modulo d addition. Its inverse operation is
+
+The ninth root of unity Eq. 14 is ω  e2πi/9 and, from Eq. 29 we
+derive that
+⎟
+⎜
+⎞
+⎛
+⎟
+⎜
+⎟
+⎜
+2c’
+⎟
+
+⎟
+⎜
+ω
+C
+det⎜
+⎜
+⎟
+⎜
+⎠  1.
+⎝
+1 0  1 ⎟
+
+ z’ 
+c’ 1
+
+CXd† |x〉|y〉  |x〉|y − x〉
+
+In some approaches, the operation Kd is required to complete the
+circuits, where
+
+(41)
+
+Kd |x〉  |d − x〉  |−x〉,
+
+2
+
+ωυk |k〉〈k|, υk ∈ Z9 .
+
+(48)
+
+which outputs the modulo d complement of the input. These
+circuits are more complex and less intuitive then the qubit SWAP
+gate [58] because they are not Hermitian, i.e., CXd ≠ CXd† .
+One way to create a Hermitian version of the qudit CNOT uses
+the GXOR gate
+
+The qutrit version of Uπ/8 has a more general form than in Eq. 30;
+i.e.
+Uυ  U(υ0 , υ1 , . . .) 
+
+(47)
+
+(42)
+
+k0
+
+FIGURE 4 | (A) is the qudit SWAP gate with the CX~ gate. (B) is the decomposing CX~ gate. The QFT represents the quantum Fourier transform while CZd is the
+selective phase shift gate.
+
+Frontiers in Physics | www.frontiersin.org
+
+6
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+1 d−1 i2πxk/d
+e
+QFT|x〉  √
+|k〉.
+d k0
+
+(52)
+
+The CZd gate adds a phase to the target qudit depending on the
+state of the control qudit. Its effect on the input qudits is
+CZd |x〉|y〉  ei2πxy/d |x〉|y〉.
+
+FIGURE 5 | Decomposing qubit Toffoli gate with the universal qubit
+gates. H is the Hadamard gate, T is the π/8 gate and S is the phase gate.
+
+(53)
+
+The inverse QFT undoes the Fourier transform process and the
+inverse of CZd is
+CZd† |x〉|y〉  e−i2πxy/d |x〉|y〉.
+
+(54)
+
+~ is
+The full evolution of the C X
+ QFT2 1 d−1 i2πky
+√
+e d |x〉|k〉
+|x〉y〉
+d k0
+
+→
+
+d−1
+2πky 2πxk
+1 d−1 i2πk(x+y)
+CZd √1
+ei d ei d |x〉|k〉  √
+e d |x〉|k〉
+d k0
+d k0
+
+→
+
+FIGURE 6 | The Simpliﬁed Toffoli gate. The ﬁrst two lines represent two
+control qubits and the third line represents a target qutrit that has three
+accessible levels. The initial and ﬁnal quantum states of the quantum
+information carrier are encoded in the |0〉 and |1〉. The H is the
+√
+generalized Hadamard gate such that H|0〉  1/ 2[|0〉+|1〉],
+√
+H|1〉  1/ 2[|0〉 - |1〉] and H|2〉  |2〉. Xa gate is a qutrit gate such that
+Xa |0〉  |2〉 and Xa |2〉  |0〉 with Xa |1〉  |1〉. With the control being qubit, the
+target being qudit, the two qudit gate in this case is a hybrid gate.
+
+GXOR|x〉|y〉  |x〉|x − y〉.
+
+| j〉 ⊗ |i〉 for i, j ∈ Zdp
+|i〉 ⊗ | j〉 otherwise
+
+†
+
+(49)
+
+2.2.3 Simpliﬁed Qubit Toffoli Gate With a Qudit
+The Toffoli gate is well known for its application to universal
+reversible classical computation. In the ﬁeld of quantum
+computing, the Toffoli gate plays a central role in quantum
+error correction [35]; fault tolerance [43] and offers a simple
+universal quantum gate set combined with one qubit Hadamard
+gates [141]. The simplest known qubit Toffoli gate, shown in
+Figure 5, requires at least ﬁve two-qubit gates [125]. However, if
+the target qubit has a third level, i.e., a qutrit, the whole circuit can
+be achieved with three two-qubit gates [133].
+A new qutrit gate Xa is introduced to the circuit that does the
+following: Xa |0〉  |2〉 and Xa |2〉  |0〉 with Xa |1〉  |1〉. The
+simpliﬁed circuit is shown in Figure 6. The two controlled gates
+are the CNOT gate and a control-Z gate, which is achieved with a
+CNOT gate between two Hadamard gates. The Hadamard gate
+here operating on the qutrit is generalized from the normal
+Hadamard gate operating on a√qubit—it only works √
+with the
+|0〉 and |1〉, such that H|0〉  1/ 2[|0〉+|1〉], H|1〉  1/ 2[|0〉 |1〉] and H|2〉  |2〉. Comparing the circuit in Figure 6 to that in
+Figure 5, it is clear that the total number of gates is signiﬁcantly
+reduced.
+This method can be generalized to n-qubit-controlled Toffoli
+gates by utilizing a single (n + 1)-level target carrier and using
+only 2n − 1 two-qubit gates [133]. In other words, the target
+carrier needs an extra level for each extra control qubit. Compare
+to the best known realization previously that requires 12n − 11
+
+(50)
+
+where dp ≤ dmin  min(dc , dt ).
+In the rest of this section, we present a Hermitian
+generalization of the qudit CNOT gate with a symmetry
+conﬁguration and a qudit SWAP circuit with a single type of
+qudit gate as shown in Figure 4A [61]. Compared with all the
+previously proposed SWAP gate for qudit, this method is easier to
+~ needed. To
+implement since there is only one type of gate CX
+~ acting on d-level qudits |x〉 and
+begin with, we deﬁne a gate C X
+|y〉 such that
+~
+CX|x〉|y〉
+ |x〉|−x − y〉,
+
+(51)
+
+where |−x − y〉 represents a state |i  −x − y〉 in the range
+~ gate is
+i ∈ {0, . . . , d − 1} mod d. Notice that, for d  2, the C X
+equivalent to the CNOT gate. The SWAP gate for qudit can be
+~ gates.
+built using three CX
+~ is generated with three steps: a qudit generalization of the
+CX
+CZ gate as CZd sandwiched by two quantum Fourier transform
+operations (QFT). The circuit illustration for the sequence of
+theses gate is shown in Figure 4B. The QFT transforms the |Es 〉x
+into a uniform superposition
+
+Frontiers in Physics | www.frontiersin.org
+
+(57)
+
+~ is its own inverse and then CX
+~  CX
+~ .
+It is easy to show that CX
+For the proposed SWAP gate, both the QFT and CZd operations
+are realizable on a multilevel quantum systems. For example,
+there are implementations of them for multilevel atoms [118,
+145]. The resulting SWAP gate provides a way to connect systems
+limited to the nearest-neighbour interactions. This gate provides
+a useful tool in the design and analysis of complex qudit circuits.
+
+However, this SWAP gate needs to be corrected with an Kd [4] as
+shown in Figure 3. A partial SWAP gate Sp [39] works on a
+hybrid system where |i〉 is a qudit of dimension dc and |j〉 is a
+qudit of dimension dt
+Sp |i〉 ⊗ | j〉  $
+
+(56)
+
+d−1 d−1
+
+2πk(x+y) 2πkl
+QFT2 1
+ei d ei d |x〉|l〉  |x〉|−x − y〉.
+d l0 k0
+
+→
+
+(55)
+
+7
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+where di is the dimension of a qudit and the number ki is the
+~ With this condition
+qudit’s connections to other qudits within E.
+fulﬁlled, the n-qubit Toffoli gate can be realized by 2n − 3 twoqudit CZ gates. The detailed realization of the n-qubit Toffoli gate
+by the properties and special operations of the tree in topology
+can be found in Ref. 89. The advantage of this scheme is the
+scalability and the ability to implement it for the multi-qubit
+controlled unitary gate Cn U.
+These Cn U gates are a crucial component in the PEA which
+has many important applications such as the quantum simulation
+[8] and Shor’s factoring algorithm [142]. This idea of combining
+qudits of different dimensions or hybrid qudit gates can also be
+applied to other qudit gates such as the SWAP and SUM gates as
+shown in Refs. [33, 39]. Thus, introducing qudits into qubit
+systems to create a hybrid qudit system offers the potential of
+improvement to quantum computation.
+
+FIGURE 7 | d-valued Quantum Multiplexer for the second qutrit and its
+realization in terms of Muthukrishan-Stroud gates (the control U operation that
+only act on one speciﬁc control state). The gate labeled +1 is the shifting gate
+that increases the state value of the control qudit by 1 (mod d).
+Depending on the value of the top control qudit, one of Ui is applied to the
+second qudit, for i ∈ {0, 1, . . . d − 1}.
+
+FIGURE 8 | Schematic view of the quantum circuit for the parity
+determining algorithm. FT is the Fourier transform and Ufk is the gate that does
+one of the two permutations and the last box represents the measurement.
+
+2.2.4 Qudit Multi-Level Controlled Gate
+For a qubit controlled gate, the control qubit has only two states
+so it is a “do-or-don’t” gate. Qudits, on the other hand, have
+multiple accessible states and thus a qudit-controlled gate can
+perform a more complicated operation [46]. The MuthukrishanStroud gate (MS gate) for a qudit applies the speciﬁed operation
+on the target qudit only if the control qudit is in a selected one of
+the d states, and leaves the target unchanged if the control qudit is
+in any other d − 1 states. Hence, the MS gate is essentially a “door-don’t” gate generalized to qudits and does not fully utilize the d
+states on the control qudit [118].
+To fully utilize the d states on the control qudit, people have
+developed the quantum multiplexer to perform the controlled U
+operations in a qudit system as shown in Figure 7, where the MS
+gate and shifting gates are combined to apply different operations
+to the target depending on different states on the control states
+[87]. Here we discuss the multi-value-controlled gate (MVCG) for
+qudits, which applies a unique operation to the target qudit for
+each unique state of the control qudit [106].
+For a d-dimensional qudit system, a two-qudit multi-valuecontrolled gate is represented by a d2 × d 2 matrix
+
+two-qubit gates [125]; this method offers a signiﬁcant resource
+reduction. Furthermore, these schemes can be extended to more
+general quantum circuits such as the multi-qudit-controlledunitary gate Cn U.
+The previous method turns the target qubit into a qudit;
+another method simpliﬁes the Toffoli gate by using only
+qudits and treating the ﬁrst two levels of the qudit as qubit
+levels and other levels as auxiliary levels. The reduction in the
+complexity of Toffoli gate is accomplished by utilizing the
+topological relations between the dimensionality of the qudits,
+where higher qudit levels serve as the ancillas [89].
+Suppose we have a system of n qudits denoted as
+Qi , i ∈ {1, . . . , n} and each qudit has dimension di ≥ 2. Qudits
+are initialized into pure or mix states on the ﬁrst two levels,
+i.e., the qubit states, and zero population for the other levels,
+i.e., the auxiliary states. This scheme assumes the ability to
+perform single-qubit operations. We can apply the desirable
+unitary operation on the qubit states and leave the auxiliary
+states unchanged. We also assume that we have the ability to
+manipulate the auxiliary levels by a generalized inverting gate Xm
+Xm |0〉  |m〉, Xm |m〉  |0〉, Xm |y〉  |y〉, for y ≠ m, 0.
+
+U0
+⎜
+⎛
+⎜
+0
+⎜
+⎜
+⎜
+⎜ 0
+MVCG  ⎜
+⎜
+⎜
+⎜
+⎜
+⎝ «
+0
+
+(58)
+
+At the same time, the two-qubit CZ gates are applied according to
+certain topological connections between qudits. We introduce a
+set E of ordered pairs (i, j), such that i, j ∈ {1, . . . , n}, i < j to
+obtain this topology and the CZ gate is deﬁned as
+
+with x ∈ {0, . . . di − 1} and y ∈ {0, . . . dj − 1}.
+~
+The set E describes an n-vertex-connected graph. Let E4E
+deﬁnes an n-vertex connected tree (acyclic graph). The main
+result is: the n-qubit Toffoli gate can be achieved with less number
+of operations if
+
+Frontiers in Physics | www.frontiersin.org
+
+0
+0
+U2
+«
+0
+
+/
+0
+⎟
+⎟
+/
+0 ⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+,
+/
+0 ⎟
+⎟
+⎟
+⎟
+⎠
+1
+0 ⎟
+/ Ud−1
+
+(61)
+
+where each Ui (i  0, 1, . . . , d − 1) is a unique unitary single-qudit
+operation. The Ui operation is applied to the target qudit when
+the control qudit is in |Es 〉 state. In the later sections, Section
+3.2.1 and Section 3.2.2 the controlled gates are MVCG and
+improve the efﬁciency of the qudit algorithm. MVCG can be
+built in many physical systems and one example in a photonic
+system is introduced in Section 5.1.
+
+CZ|11〉Qi ,Qj  −|11〉Qi ,Qj CZ|xy〉Qi ,Qj  |xy〉Qi ,Qj for xy ≠ 1, (59)
+
+di ≥ ki + 1,
+
+0
+U1
+0
+«
+0
+
+2.3 Geometrically Quantifying Qudit-Gate
+Efﬁciency
+In a quantum computer, each qudit can remain coherent for a
+limited amount of time (decoherence time). After this time, the
+
+(60)
+
+8
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+of the section. Let ejk denote the d × d matrix with a one in the
+(j, k) elements and 0 s elsewhere, a basis can be described as
+
+FIGURE 9 | The Deutsch-Jozsa circuit in qudit system. The Fn are the
+qudit Hadamard gates achieved with quantum Fourier transform.
+
+udjk  ejk + ekj , 1 ≤ j < k ≤ d,
+
+(62)
+
+udjk  i%ejk − ekj &, 1 ≤ k < j ≤ d,
+
+(63)
+
+udjj  diag%1, . . . , 1, −j, 0d−2j &, j ∈ [d − 1].
+
+(64)
+
+Here, diag represents the diagonal matrix, 0d−2j denotes the zeros
+of length d − 2j. udjk are traceless and Hermitian and together with
+the identity matrix 1d serve as the basis of the vector space of
+d × d Hermitian matrix. These generalized Gell-Mann matrices
+can be used to generate the group representation of SU(d) while
+the other representations can be achieved by transform these
+matrices uniformly. To derive the bases of SU(dn ), we ﬁrst deﬁne
+xl  udjk with l  jd + k, l ∈ [d 2 ] and
+
+quantum information is lost due to the outside perturbations and
+noises. In the computation process, quantum gates take certain
+amount of time to alter the states of the qudits. The decoherence
+time of a qudit state limits the number of quantum gates in the
+circuit. Therefore, we need to design more efﬁcient algorithms
+and circuits. A method exists to do a general systematic
+evaluation of the circuit efﬁciency with the mathematical
+techniques of Riemannian geometry [126]. By reforming the
+quantum circuits designing problems as a geometric problem,
+we are able to develop new quantum algorithms or to exploring
+and evaluating the full potential of the quantum computers. This
+evaluation is able to generalized to qutrit systems, where the least
+amount of the gates required to synthesize any unitary operation
+is given [100].
+To begin with, we assume that the operations done by the
+quantum circuit can be described by a unitary evolution U
+derived from the time-dependent Schrödinger equation dU/dt 
+−iHU with the boundary condition tf , U(tf )  U. The complexity
+of realizing U can be characterized by a cost function F[H(t)] on
+the Hamiltonian control H(t). This allow us to deﬁne a
+Riemannian geometry on the space of unitary operations
+[122]. Finding the minimal geodesics of this Riemannian
+geometry is equivalent to ﬁnding the optimal control function
+H(t) of synthesizing the desired U.
+Now we transform the problem of calculating a lower bound to
+the gate number to ﬁnding the minimal geodesic distance
+between the identity operation I and U. Instead of Pauli
+matrices for the qubit representation of the Hamiltonian, the
+qutrit version of Hamiltonian is expanded in terms of the GellMann matrices. Here we give an explicit form of the Gell-Mann
+matrices representation in d-dimension [109] which is used for
+qutrit (where d  3) as well as other qudit systems in the later part
+
+Xls  I⊗s−1 ⊗xl ⊗I ⊗d−s
+
+(65)
+
+acts on the s-th qudit with xl and leaves the other qudits
+unchanged. The bases of SU(d n ) is constructed by
+with
+all
+possible
+{YtPt }, t ∈ [n], Pt  {i1 , . . . , it }
+1 < i1 < / < ik < n, where
+i
+
+YtPt   Xjikk .
+
+(66)
+
+k0
+
+YtP denotes all operators with generalized Gell-Mann matrices
+xj1 , . . . , xjk acting on t qudits at sites P  {i1 , . . . , ik }, respectively,
+and rest with identity. It is easy to prove that with the generalized
+Gell-Mann matrices representations,1-body and 2-body
+interactions can generate all 3-body interactions.
+Now the Hamiltonian in terms of the Gell-Mann matrices
+(with the notation σ ) can be written as
+H
+
+′
+
+hσ σ +
+
+σ
+
+″
+
+hσ σ.
+
+(67)
+
+σ
+
+All coefﬁcients hσ are real and, in '​ hσ σ , σ goes over all possible
+′σ
+″
+one- and two-body interactions whereas, in '​ σ hσ σ , σ goes over
+everything else. The cost function is
+F(H) :
+
+′
+σ
+
+h2σ σ + p2
+
+″
+σ
+
+h2σ σ ,
+
+(68)
+
+FIGURE 10 | Quantum Fourier transform in qudit system. Hd is the d-dimensional Hadamard gate and the expression of the Rd gate is shown in Eq. 99. Resultant
+states are shown to the right.
+
+Frontiers in Physics | www.frontiersin.org
+
+9
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+constant ε, each unitary UA ∈ SU(dn ) can be synthesized using
+O(ε−2 ) one- and two-qudit gates, with error U − UA ≤ ε.” To
+break up the constant ε to an explicit form, we have ε−2  N 2 d4 n2 ,
+where d is the dimension of the qudit, n is the number of qudits
+and N is the number of the intervals that d(I, U) divides into,
+such that a small δ  d(I, U)/N ≤ ε. The qudit case shows the
+explicit relation between the non-local quantum gate cost and the
+approximation error for synthesizing quantum qudit operations.
+In summary, for the quantum circuit model, one can decide a
+lower bound for the number of gates needed to synthesize U by
+ﬁnding the shortest geodesic curve linking I and U. This provides
+a good reference for the design of the quantum circuit using
+qudits.
+
+where p is a penalty cost by applying many-body terms. Now that
+the control cost is well deﬁned, it is natural to form the distance in
+the space SU(3n ) of n-qutrit unitary operators with unit
+determinant. We can treat the function F(H) as the norm
+related to a Riemannian metric with a metric tensor g as:
+⎪
+⎧
+⎨ 0,
+g  ⎪ 1,
+⎩ 2
+p,
+
+σ ≠τ
+.
+σ  τ and σ is one or two body
+σ  τ and σ is three or more body
+
+(69)
+
+The distance d(I, U) between I and U which is the minimum
+curve connecting I and U equals to the minimal length solution to
+the geodesic equation
+(
+
+dH
+, K)  i〈H, [H, K]〉,
+dt
+
+(70)
+
+3 QUANTUM ALGORITHMS USING QUDITS
+
+where 〈, 〉 denotes the inner product on the tangent space SU(3n )
+deﬁned by the metric components (69), and [, ] denotes the
+matrix commutator and K is an arbitrary operator in SU(3n ).
+All lemmas backing up the ﬁnal theorem have been proven in
+detail [100]; but the reasoning behind can be summarized in four
+parts. First let p be the three- and more-body items penalty. With
+large enough p, the distance d(I, U) is guarantee to have a
+supremum that does not depend on p. Secondly, we have
+||U − UP || ≤ 3n d([U])*p,
+
+A qudit, with its multi-dimensional nature, is able to store and
+process a larger amount of information than a qubit. Some of the
+algorithms described in this section can be treated as direct
+generalizations of their qubit counterparts and some utilize the
+multi-dimensional nature of the qudit at the key subroutine of the
+process. This section introduces examples of the well-known
+quantum algorithms based on qudits and divides them into
+two groups: algorithms for the oracle-decision problems in
+Section 3.1 and algorithms for the hidden Abelian subgroup
+problems in Section 3.2. Finally, Section 3.3 discusses how the
+qudit gates can improve the efﬁciency of the quantum search
+algorithm and reduce the difﬁculty in its physical set-up.
+
+(71)
+
+where  •  is the operator norm and UP the corresponding
+unitary operator generated by the one- and two-body items
+projected Hamiltonian HP (t). Thirdly, given an n-qutrit
+unitary operator U generated by H(t) with the condition
+||H(t)|| ≤ c in a time interval [0, Δ], then
+
+
+U − exp −iHΔ ≤ 2 ecΔ − 1 − cΔ  O c2 Δ2 ,
+(72)
+
+3.1 Qudit Oracle-Decision Algorithm
+In this subsection we explore the qudit generalizations of the
+efﬁcient algorithms for solving the oracle decision problems,
+which are quite important historically and used to
+demonstrate the classical-quantum complexity separation [44,
+45]. The oracle decision problems is to locate the contents we
+want from one of the two mutually disjoint sets that is given. We
+start in Section 3.1.1 with a discussion about a single-qudit
+algorithm that determines the parity of a permutation. In
+Section 3.1.2, the Deutsch-Jozsa algorithm in qudit system is
+discussed and its unique extension, the Bernstein-Vazirani
+algorithm is provided in Section 3.1.3.
+
+where H is the mean Hamiltonian. Lastly, for H as an n-qutrit
+one- and two-body Hamiltonian, a unitary operator UA exists
+that satisﬁes
+
+ iHΔ
+
+− UA  ≤ c2 n2 Δ3
+(73)
+e
+and can be generated with at most c1 n2 / Δ one- and two-qutrit
+gates, and constants c1 and c2 .
+All these lemmas combined gives the ﬁnal theorem for the
+qutrit system: for a unitary operator U in SU(3n ), O(nk d(I, U)3 )
+one- and two-qutrit gates is the lower bound to synthesize a
+unitary UA with the condition ||U − UA || ≤ c, given a constant c. It
+is worth mentioning that for any groups of unitaries U, which is
+labeled by the number of qudits n, the ﬁnal theorem shows a
+quantum circuit exists with a polynomial of d(I, U) number of
+gates such that it can approximates U to arbitrary accuracy.
+Alternatively,a polynomial-sized quantum circuit exists if and
+only if the distance d(I, U) itself is scaling polynomially with n.
+With appropriate modiﬁcation, the Riemannian geometry
+method can be used to ascertain the circuit-complexity bound
+for a qudit system [109]. In this scheme, the unitary matrix
+U ∈ SU(dn ) is represented by the generalized Gell-Mann
+matrices as deﬁned in the earlier part of the section. The main
+theorem in the qudit case of the Ref. [109] is “for any small
+
+Frontiers in Physics | www.frontiersin.org
+
+3.1.1 Parity Determining Algorithm
+In this section we review a single qutrit algorithm which provides
+a two to one speedup than the classical counterpart. This
+algorithm can also be generalized to work on an arbitrary
+d-dimensional qudit which solves the same problem of a
+larger computational space [62]. In quantum computing,
+superposition, entanglement and discord are three important
+parts for the power of quantum algorithms and yet the full
+picture behind this power is not completely clear [151].
+Recent research shows that we can have a speedup in a fault
+tolerant quantum computation mode using the quantum
+contextuality [72]. The contextual nature can be explained as
+“a particular outcome of a measurement cannot reveal the preexisting deﬁnite value of some underlying hidden variable” [92,
+
+10
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+FIGURE 11 | A) The circuit for the ﬁrst stage of the PEA. The qudits in the second register whose states represent |u〉 are undergoing the U operations and the
+generated phase factors are kicking back to the qudits in the ﬁrst register, giving the results to the right. (B) The schematic circuit for the whole stage of PEA. After the ﬁrst
+stage of the PEA, inverse Fourier transform (FT −1 ) is applied to the qudits in the ﬁrst register and the phase factors can be obtained by measuring the states of the ﬁrst
+register qudits.
+
+FIGURE 12 | (A) Circuit illustration for Grover iteration, G, in a qudit system. The F gate is the proposed qudit gate that transforms the single-qudit state |0k 〉 into an
+equal weight superposition state. (B) Schematic circuit illustration of the qudit quantum search algorithm.
+
+93]. In other words, the results of measurements can depend on
+how we made the measurement, or what combination of
+measurements we chose to do. For the qudit algorithm
+discussed below, a contextual system without any quantum
+entanglement is shown to solve a problem faster than the
+classical methods [62]. Because this qudit algorithm uses a
+single qudit throughout the process without utilizing any
+correlation of quantum or classical nature, it acts as a perfect
+example to study the sources of the quantum speed-up other than
+the quantum correlation.
+The algorithm solves a black-box problems that maps d inputs
+to d outputs after a permutation. Consider the case of three
+objects where six possible permutations can be divided into two
+groups: even permutation that is a cyclic change of the elements
+and odd permutation that is an interchange between two
+elements. If we deﬁne a function f (x) that represents the
+permutation on the set x ∈ {−1, 0, 1}, the problems become
+determining the parity of the bijection f : −1, 0, 1 → −1, 0, 1.
+We use Cauchy’s two-line notation to deﬁne three possible
+even functions fk , namely,
+1 0 −1
+1
+, f2 : 
+1 0 −1
+0
+1 0 −1
+f3 : 
+,
+−1 1 0
+
+f1 : 
+
+f4 : 
+
+0
+
+−1
+
+1
+, f5 : 
+1
+0
+−1
+.
+0
+
+0 −1
+1 −1
+
+,
+(75)
+
+The circuit for the single qutrit algorithm in a space spanned by
+8, where the operation
+Ufk
+{|1〉, |0〉 | − 1〉} is shown in Figure
+
+
+
+
+
+applies
+f
+to
+the
+state:
+U
+(
++
++
+−
+1〉)
+
+(1)〉
++
+(0)〉
++
+1〉
+0〉
+
+f
+f
+k
+f
+k
+k
+k
+
+fk ( − 1)〉) and FT is the single-qutrit Fourier transform
+ω
+1 ⎜
+⎝ 1
+FT  √ ⎛
+3
+ω−1
+
+1
+1
+1
+
+ω−1
+⎟
+⎠
+1 ⎞
+ω
+
+(76)
+
+using ω as the cube root of unity Eq. 14. The process starts with
+state |1〉 undergoing FT and becoming |ψ 1 〉 as
+FT|1〉  |ψ 1 〉  ω|1〉 + |0〉 + ω−1 |−1〉. Then we obtain |ψ k 〉 by
+applying Ufk to |ψ 1 〉. It is easy to show that
+|ψ 1 〉  ω−1 |ψ 2 〉  ω|ψ 3 〉
+
+(77)
+
+|ψ 4 〉  ω−1 |ψ 5 〉  ω|ψ 6 〉.
+
+(78)
+
+and, similarly,
+
+0 −1
+,
+−1 1
+
+Hence, application of Ufk on |ψ1 〉 gives |ψ1 〉 (up to a phase factor)
+for an even permutation and |ψ 4 〉  FT|−1〉 for an odd
+permutation. Thus, applying inverse Fourier transform FT −1 at
+the end, we measure |1〉 for even fk and |−1〉 for odd fk . We are
+
+(74)
+
+and the remaining three odd function are
+
+Frontiers in Physics | www.frontiersin.org
+
+1
+
+−1 0
+1 0
+f6 : 
+1 −1
+
+11
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+element m ∈ {0, 1, . . . , n − 1}. As f (p)  f (q) if p ≡ q(mod n),
+each of the elements in the codomain {0, 1, . . . , n − 1} is mapped
+to nr−1 different elements in the domain. To ﬁnish the proof of the
+n-nary Deutsch-Jozsa algorithm, another trivial lemma is needed:
+αk
+Primitive nth roots of unity satisfy '​ n−1
+k0 ω  0 for nonzero
+integers α.
+The circuit of the Deutsch-Jozsa algorithm in qudits is shown
+in Figure 9. This algorithm of r qudits can both distinguish
+whether a function Uf is balanced or constant and verify a closed
+expression for an afﬁne function in Uf within a constant term
+which is a universal phase factor of the x-register and thus is lost
+during the measurement. The other coefﬁcients of the afﬁne
+function A1 , . . . , Ar are determined by measuring the state of the
+x-register at the output, |A1 , . . . , Ar 〉.
+A detailed derivation of the circuit has been shown [53]; but
+the reasoning is an analogy to the qubit version of the DeutschJozsa algorithm. If the function Uf is constant, the ﬁnal state after
+the measurement is |0〉⊗r |n − 1〉 as for j ≠ 0 every states in the
+x-register have null amplitudes. Therefore, if every x-register
+qudit yields |0〉, it is a constant function; otherwise the
+function is balanced.
+The Deutsch-Jozsa algorithm in the qudit system shares the
+same idea while enabling more applications such as
+determining the closed form of an afﬁne function. Although
+this algorithm is mainly of theoretical interest, the n-nary
+version of it may have applications in image processing. It
+has the potential to distinguish between maps of texture in a
+Marquand chart since the images of which are encoded by
+afﬁne functions [121]. This algorithm can also be modiﬁed to
+set up a secure quantum key-distribution protocol [121]. Other
+proposed Deutsch-Jozsa algorithms exist such as a method that
+makes use of the artiﬁcially allocated (subsystems) as qudits
+[88] and a generalized algorithm on the virtual spin
+representation [86].
+
+able to determine the parity of fk by a single application of fk on a
+single qutrit.
+Generalizing to a d–dimensional qudit system,
+1 d (k′ −1)(k− 1)
+|ψ k 〉 : √
+ω
+|k′ 〉.
+d k′ 1
+
+(79)
+
+In this scenario, a positive cyclic permutation maps |ψ 2 〉 onto
+itself whereas negative permutations give |ψ d 〉. We then measure
+the results after applying an inverse Fourier transform to solve for
+the parity of the permutation. This algorithm has been
+implemented on the NMR system for both the qutrit [48] and
+quart [62] cases. It is also realized on a linear optic system [163].
+Although the model problem has no signiﬁcant applications and
+the speedup in the higher dimensional cases is not exponential,
+this proposed algorithm provides an elegant yet simple example
+for quantum computation without entanglement.
+
+3.1.2 Qudit Deutsch-Jozsa Algorithm
+Deutsch algorithm (with its origin in Ref. 44 and improved in Ref.
+33 is one of the simplest examples to show the speed advantage of
+quantum computation. Deutsch-Jozsa algorithm is n-qubits
+generalization of the Deutsch algorithm. Deutsch-Jozsa
+algorithm can determine if a function f (x) is constant, with
+constant output, or balanced, that gives equal instances of both
+outputs [125]. The process itself consists of only one evaluation of
+the function f (x). In this algorithm, Alice sends Bob N qubits in
+the query register and one in the answer register where Bob
+applies the function to the query register qubits and stores the
+results in the answer register. Alice can measure the qubits in the
+query register to determine whether Bob’s function is constant or
+balanced. This algorithm makes use of the superposition property
+of the qubit and reduces the minimum number of the function
+call from 2n /2 + 1 classically to only 1 with quantum algorithm.
+This gives another example of the advantages of quantum
+algorithms.
+The Deutsch-Jozsa algorithm can be performed in the qudit
+system with a similar setup. Furthermore, with the qudit system,
+Deutsch-Jozsa algorithm can also ﬁnd the closed expression of an
+afﬁne function accurate to a constant term [53]. The constant and
+balanced function in the n dimensional qudit case have the
+following deﬁnition: “An r-qudit multi-valued function of the
+form
+f : {0, 1, . . . , n − 1}r
+
+→ {0, 1, . . . , n − 1}
+
+3.1.3 Qudit Generalization of the Bernstein-Vazirani
+Algorithm
+In Section 3.1.2 we have discussed an application of a qudit
+Deutsch-Jozsa algorithm (DJA): verify a closed expression of an
+afﬁne function. This application is closely related to the
+Bernstein-Vazirani algorithm discussed in this section. Given
+an input string and a function that calculates the bit-wize innerproduct of the input string with an unknown string, the
+Bernstein-Vazirani algorithm determines the unknown string
+[12]. This algorithm can be treated as an extension of the
+Deutsch-Jozsa algorithm.
+The qudit generalization of the Bernstein–Vazirani algorithm
+can determine a number string of integers modulo d encoded in
+the oracle function [95, 119]. First we introduce a positive integer
+d and consider the problem in modulo d throughout. Given an
+N-component natural number string
+
+(80)
+
+is constant when f (x)  f (y) ∀x, y ∈ {0, 1, . . . , n − 1}r and is
+balanced when an equal number of the nr domain values,
+namely nr−1 , is mapped to each of the n elements in the codomain” [53].
+It can be shown that all of the afﬁne functions of r qudits
+f (x1 , . . . , xr ) : A0 ⊕ A1 x1 ⊕ /⊕ Ar xr , A0 , . . . , Ar ∈ Zn ,
+
+(81)
+
+g(a) : g(a1 ), g(a2 ), g(a3 ), . .. , g(aN ), g(aj ) ∈ {0, 1, . .. , d − 1},
+
+can be categorized to either constant or balanced functions [53].
+If all the coefﬁcients Ai ≠ 0  0 then the function is constant. For
+afﬁne function with non-zero coefﬁcient Ai ≠ 0 , every element in
+its domain {0, 1, . . . , n − 1}r is reducible modulo n to a unique
+
+Frontiers in Physics | www.frontiersin.org
+
+(82)
+we deﬁne
+
+12
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+f (x) : g(a) · x mod d
+ g(a1 )x1 + g(a2 )x2 + . . . + g(aN )xN mod d,
+
+(83)
+
+x  (x1 , x2 , . . . , xN ) ∈ {0, 1, . . . , d − 1}N .
+
+(84)
+
+for
+
+The oracle in the algorithm applies f (x) to the input string x and
+computes the result, namely, the number string g(a) encoded in
+the function f (x).
+The input state x is chosen to be |ψ 0 〉  |0〉⊗N |d − 1〉, where
+|0〉⊗N means initialization of the N control-qudits into their |0〉
+states and |d − 1〉 means the target qudit is in its d − 1 state.
+Quantum Fourier transforms of the pertinent input states are
+|0〉
+
+QFT
+
+→
+
+|y〉
+√
+d
+y0
+
+d−1
+
+(85)
+
+and
+|d − 1〉
+
+QFT
+
+→
+
+d−1
+
+1
+√ ωd−y |y〉,
+d
+y0
+
+for ω a root of unity Eq. 14. The component-wize Fourier
+transform of a string encoded in the state |x1 x2 . . . xN 〉 is
+|x1 x2 . . . xN 〉
+
+QFT
+
+→
+
+ωx·z |z〉
+√ ,
+dN
+z∈K
+
+FIGURE 13 | Illustration of a qudit multipod linkage: the top is in the
+original basis and the bottom is in the Morris-Shore basis. Δ is a common
+detuning between a common (ancilla) state and other qudit states, Ωk
+represents the single-photon Rabi frequencies. State |b〉 is a
+superposition of the qudit states weighted by the couplings Ωk ; |un 〉 are the
+states that are not in the dynamics.
+
+(86)
+
+where
+K  {0, 1, . . . , d − 1}N , z : (z1 , z2 , . . . , zN ).
+
+(87)
+
+We denote the Fourier transform of the |d − 1〉 state as |ϕ〉 and
+the input state after the Fourier transform is
+|x〉
+√ |ϕ〉
+|ψ 1 〉 
+N
+x∈K d
+
+algorithm in terms of speed by a factor of N [95]. The qudit
+generalizations of the Bernstein-Vazirani algorithm helps us
+comprehend the potential of the qudit systems.
+
+(88)
+
+Now we introduce the oracle as the Of (x) gate such that
+ O
+|x〉j〉 f (x) |x〉| f (x) + j mod d〉,
+
+→
+
+(89)
+
+f (x)  g(a) · x mod d.
+
+(90)
+
+3.2 Qudit Algorithms for the Hidden Abelian
+Subgroup Problems
+Many of the widely used quantum algorithms such as the discrete
+Fourier transform, the phase estimation and the factoring ﬁt into
+the framework of the hidden subgroup problem (HSP). In this
+section, we review the qudit generalization of these algorithms.
+The qudit Fourier transform is discussed in Section 3.2.1 and its
+application, the PEA is reviewed in Section 3.2.2. A direct
+application of these algorithms, Shor’s factoring algorithm
+performed with qutrits and in metaplectic quantum
+architectures is also introduced Section 3.2.2.
+
+where
+By applying the Of (x) gate to |ψ1 〉 and following the formula by
+phase kick-back, we obtain the output state
+Of (x) |ψ 1 〉  |ψ 2 〉 
+
+ωf (x) |x〉
+√
+|ϕ〉.
+dN
+x∈K
+
+(91)
+
+Finally, obtain the |ψ 3 〉 which is the state after inverse Fourier
+transform of the ﬁrst N qudits of |ψ 2 〉. By measuring the ﬁrst N
+quantum state of |ψ 3 〉 we can obtain the natural number string we
+want that is offset up to a constant
+g(a1 ), g(a2 ), g(a3 ), . . . , g(aN )
+
+3.2.1 Quantum Fourier Transform With Qudits
+The quantum Fourier transform algorithm (QFT) is realizable on
+a qubit system [125]. QFT, as the heart of many quantum
+algorithms, can also be performed in a qudit system [145,
+165]. In an N-dimensional system represented with n
+d-dimensional qudits, the QFT, F(d, N), where N  d n ,
+transforms the computational basis
+
+(92)
+
+using a single query of the oracle function.
+The Bernstein-Vazirani algorithm clearly demonstrates the
+power of quantum computing. It outperforms the best classical
+
+Frontiers in Physics | www.frontiersin.org
+
+{|0〉, |1〉, . . . , |n − 1〉}
+
+13
+
+(93)
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+into a new basis set [26]
+
+decreases exponentially with d and the smaller error bounds
+are smaller [165]; which outperforms the binary case [34].
+
+1 N−1 2πijk/N
+F(d, N)|j〉  √
+e
+|k〉.
+N k0
+
+(94)
+
+3.2.2 Phase-Estimation Algorithm With Qudits
+With the qudit quantum Fourier transform, we are able to
+generalize the PEA to qudit circuits [26]. Similar to the PEA
+using qubit, the PEA in the qudit system is composed by two
+registers of qudits. The ﬁrst register contains t qudits and t
+depends on the accuracy we want for the estimation. We
+assume that we can perform a unitary operation U to an
+arbitrary number of times using qudit gates and generate its
+eigenvector |u〉 and store it using the second register’s qudits [17].
+We want to calculate the eigenvalue of |u〉 where U|u〉  e2πir |u〉
+by estimating the phase factor r.
+The following derivations follow those in Ref. 26. For
+convenience, we rewrite the rational number r as
+
+For convenience, we write an integer j in a base-d form. If j > 1
+then
++ / + jn d 0
+j  j1 j2 /jn  j1 dn−1 + jn−2
+2
+
+(95)
+
+and, if j < 1, then
+j  0.j1 j2 /jn  j1 d −1 + j2 d −2 + / + jn d−n .
+
+(96)
+
+The QFT acting on a state |j〉 can be derived and rewritten in a
+product form as
+1 d −1 2πijk/dn
+|j〉  |j1 j2 /jn 〉1 n/2
+e
+|k〉
+d k0
+n
+
+
+
+1 d−1
+d n/2 k1 0
+
+d−1
+
+/
+
+2πij%'
+
+​ n
+
+e
+
+l1
+
+kl d−l &
+
+t
+
+r  R/d t 
+
+|k1 k2 /kn 〉
+
+Rl /dl  0.R1 R2 /Rt .
+
+(100)
+
+k0
+
+kn 0
+
+As shown in Figure 11A, each qudit in the ﬁrst register passes
+through the generalized Hadamard gate H ≡ F(d, d). For the lth
+qudit of the ﬁrst register, we have
+
+d−1
+
+d−1
+n
+1
+−l
+ n/2
+/ ⊗ e2πijkl d |kl 〉
+d k1 0 kn 0 l1
+d−1
+1 n⎡
+⎢
+⎣ e2πijkl d−l |kl 〉⎤⎥⎦.
+⊗
+dn/2 l1 kl 0
+
+1 d−1
+F(d, d)|0l 〉  √
+|kl 〉.
+d kl 0
+
+This process can be realized with the quantum circuit shown in
+Figure 10, and the fully expanded expression of the product form
+is shown on the right side of the ﬁgure. The generalized
+Hadamard gate H d in the ﬁgure is deﬁned as H d : F(d, d)
+which effects the transform
+
+(97)
+H d jn 〉 |0〉 + e2πi0.jn |1〉 + / + e2(d−1)πi0.jn |d − 1〉.
+
+Then the lth qudit is used to control the operation U d on the
+target qudits of the state |u〉 in the second register, which gives
+
+
+
+t−l
+
+l−1
+
+/
+/
+1
+/
+
+e
+
+«
+e2(d−1)πi0.(d− 1)
+
+⎟
+⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+⎠.
+
+/
+/
+1
+/
+
+0
+0
+«
+e2πi(d−1)/d
+
+(102)
+
+d−1
+
+t−l
+⎠⊗|u〉.
+⎝⊗√1
+⎛
+e2πikl d r |kl 〉⎞
+d
+l1
+kl 0
+
+(98)
+
+(103)
+
+Therefore, through a process called the “phase kick-back”,
+the state of the ﬁrst register receives the phase factor and
+becomes
+1 d −1 2πirk
+e |k〉.
+d t/2 k0
+t
+
+⎟
+⎞
+⎟
+⎟
+⎟
+⎟
+⎟
+⎠.
+
+|Register 1〉
+
+(99)
+
+k
+
+(104)
+
+The eigenvalue r which is represented by the state |R〉 can be
+derived by applying the inverse QFT to the qudits in the ﬁrst
+register:
+
+The black dots in the circuit are multi-value-controlled gates
+that apply Rdk to the target qudit j times for a control qudit in
+state |j〉. In order to complete the Fourier transform and
+ensure the correct sequence of j1 j2 /jn , a series of SWAP
+gates are applied at the end, which are not explicitly drawn
+in Figure 10.
+The QFT developed in qudit system offers a crucial subroutine
+for many quantum algorithm using qudits. Qudit QFT offers
+superior approximations where the magnitude of the error
+
+Frontiers in Physics | www.frontiersin.org
+
+t−l
+
+Note that the function of the controlled operation CU d can be
+considered as a “quantum multiplexer” [24, 87, 139]. After
+executing all the controlled operations on the qudits, the qudit
+system state turns out to be
+t
+
+1
+2πi0.(d−1)
+
+k
+
+t−l
+
+In the circuit the Rdk gate is a phase gate that has the expression
+1
+0
+2πi/dk
+⎜
+⎛
+⎜
+0
+e
+⎜
+d
+⎜
+Rk  ⎜
+⎜
+⎝«
+«
+0
+0
+
+t−l
+
+CU d |k〉⊗|u〉  |k〉%U d & |u〉  e2πikd r |k〉⊗|u〉.
+
+The matrix representation of H d is
+1
+1
+⎜
+⎛
+⎜
+1
+e2πi0.1
+⎜
+⎜
+⎜
+⎜
+⎝«
+«
+1 e2(d−1)πi0.1
+
+(101)
+
+F −1 d, d t |Register 1〉  |R〉.
+
+(105)
+
+The whole process of PEA is shown in Figure 11B. To obtain the
+phase r  R/d t exactly, we can measure the state of the ﬁrst
+register in the computational basis.
+The PEA in qudit system provides a signiﬁcant improvement
+in the number of the required qudits and the error rate decreases
+
+14
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+exponentially as the qudit dimension increases [129]. A long list
+of PEA applications includes Shor’s factorization algorithm [142];
+simulation of quantum systems [1]; solving linear equations [69,
+128]; and quantum counting [147]. To give some examples, a
+quantum simulator utilizing the PEA algorithm has been used to
+calculate the molecular ground-state energies [8] and to obtain
+the energy spectra of molecular systems [13, 41, 42, 84, 154].
+Recently, a method to solve the linear system using a qutrit
+version of the PEA has been proposed [138]. The qudit version of
+the PEA opens the possibility to realize all those applications that
+have the potential to out-perform their qubit counterparts.
+Shor’s quantum algorithm for prime factorization gives an
+important example of super-polynomial speed-up offered by a
+quantum algorithm over the currently-available classical
+algorithms for the same purpose [143]. The order-ﬁnding
+algorithm at the core of the factoring algorithm is a direct
+application of the PEA. With the previous discussion on the
+qudit versions of the quantum Fourier transform and phase
+estimation, we have the foundation to generalize Shor’s
+factoring algorithm to the higher dimensional qudit system.
+Several proposals for performing Shor’s algorithm on the qudit
+system, such as the adiabatic quantum algorithm of two qudits for
+factorization [166]; exist. This method makes use of a timedependent effective Hamiltonian in the form of a sequence of
+rotation operators that are selected accoding to the qudit’s
+transitions between its neighboring levels.
+Another proposal carries out a computational resource
+analysis on two quantum ternary platforms [17]. One is the
+“generic” platform that uses magic state distillation for
+universality [25]. The other, known as a metaplectic
+topological quantum computer (MTQC), is a non-Abelian
+anyonic platform, where anyonic braiding and interferomic
+measurement is used to achieved the universality with a
+relatively low cost [37, 38]. The article discusses two different
+logical solutions for Shor’s period-ﬁnding function on each of the
+two platforms: one that encodes the integers with the binary
+subspace of the ternary state space and optimizes the known
+binary arithmetic circuits; the other encodes the integer directly
+in the ternary space using the arithmetic circuits stemming in Ref.
+16. Signiﬁcant advantages for the MTQC platform are found
+compared to the others. In particular the MTQC platform can
+factorize an n-bit number with n + 7 logical qutrits with the price
+of a larger circuit-depth. To sum up the comparison, the MTQC
+provides signiﬁcant ﬂexibility at the period ﬁnding algorithm for
+the ternary quantum computers.
+
+Grover’s quantum search with qudits have been proposed,
+such as one that uses the discrete Fourier transform as an
+alternative to the Hadamard gate [54] or another
+d-dimensional transformation [101] for the construction of
+the reﬂection-about-average operator (also known as the
+diffusion operator). In this section, an instruction on setting
+up Grover’s algorithm in the qudit system is reviewed as well as
+a proposal of a new way to build a quantum gate F that can
+generate an equal-weight superposition state from a single
+qudit state [79]. With the new gate F, it is easier to realize
+Grover’s algorithm in a physical system and improve the overall
+efﬁciency of the circuit.
+Grover’s algorithm solves the unstructured search problem
+by applying Grover’s oracle iteratively as shown in
+Figure 12B. To construct the oracle, we build qudit gates
+to perform the oracle function f (x) that acts differently on the
+search target s as compared to all the others. The logic behind
+the algorithm is to amplify the amplitude of the marked state
+|s〉 with the oracle function, while attenuating the amplitudes
+of all the other states.
+The marked state is ampliﬁed enough to
+√
+be located in O( N ) steps for an N dimensional search space.
+In each step Grover’s oracle is executed one time. This oracle
+can be broken into two parts: (1) Oracle query. The oracle
+shifts the phase of the marked state |s〉 and leaving others
+unchanged by doing
+Rs ϕs   1 + eiϕs − 1|s〉〈s|.
+
+(2) Reﬂection-about-average. This operation is a reﬂection about a
+vector |a〉 with a phase ϕa :
+Ra ϕa   1 + eiϕa − 1|a〉〈a|.
+
+(107)
+
+It is constructed by applying the generalized Hadamard gate H,
+applying phase shift to |0〉 state and then applying H again. It is
+straightforward to show that
+H ⊗n R0 ϕa H ⊗n  Ra ϕa .
+The two steps combined form Grover’s operator G, which is one
+execute of Grover’s iteration. This process of Grover’s iteration G
+is shown in Figure 12A.
+Building Grover’s operator in a qudit system can be simpliﬁed
+both algorithmically and physically. The most important
+improvement can be achieved by replacing the Hadamard gate
+H with F which drives the single-qudit state |0k 〉 into an equal
+weight superposition state,
+d−1
+
+3.3 Quantum Search Algorithm With Qudits
+
+F|0k 〉 
+
+The quantum search algorithm, also known as Grover’s
+algorithm, is one of the most important quantum algorithms
+that illustrates the advantage of quantum computing. Grover’s
+algorithm is able to outperform the classical search algorithm for
+a large database. The size of the computational space in an
+n-qubit system is a Hilbert space of 2n dimensions.
+Since there is a practical limit for the number of working
+qubits, the working Hilbert space can be expanded by
+increasing the dimension of each carrier of information,
+i.e., using qudits and qudit gates. Several schemes of
+
+Frontiers in Physics | www.frontiersin.org
+
+(106)
+
+ξ q |qk 〉,
+
+(108)
+
+q0
+
+ 
+with ξ q   d−1/2 , in all qudits (k ∈ {1, 2, . . . , n}). The F
+function can be realized by a single physical interaction in
+a multipod system easily. The multipod system consists of d
+degenerate quantum states |0〉, |1〉, . . . , |d − 1〉. A common
+(ancilla) state |c〉 couples these states to each other by twophoton Raman processes, as illustrated in Figure 13. The
+root-mean-square (rms) Rabi frequency as the coupling
+factor of the two states is
+
+15
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+adiabatic condition, into a close approximation of the ground
+state of the Hamiltonian specifying the problem [55]. The
+advantage of adiabatic quantum computing is evident in its
+natural correspondence to quantizing satisﬁability problems
+[55]; and current efforts to exploit adiabatic quantum
+computing focus on quantum annealing, which is a quantum
+generalization of the simulated annealing metaheuristic used for
+non-quantum global optimization problems [40, 56, 83].
+Quantum annealing is an important branch of quantum
+computing, particularly at the commercial level exempliﬁed by
+D-Wave’s early and continuing work in this domain. As D-Wave
+researchers themselves point out, realistic solid-state devices
+treated as qubits are not actually two-level systems and
+higher-dimensional representations of the dynamics must be
+considered to model and simulate realistic solid-state quantum
+annealers. The effect of states outside the qubit space, namely the
+treatment of solid-state quantum annealing as qudit dynamics,
+has been studied carefully with conditions established for
+soundness of qubit approximations [5].
+In fact the qudit nature of so-called superconduting qubits,
+i.e., the higher-dimensional aspects of the objects serving as
+qubits, is not just a negative feature manifesting as leakage
+error; remarkable two-qubit gate performance is achieved by
+exploiting adiabatic evolution involving avoided crossings with
+higher levels [10, 110] with this exploitation for fast, high-ﬁdelity
+quantum gates extendable to three-qubit gates and beyond by
+exploiting intermediate qudit dynamics and avoided level
+crossings [160, 161]. Another suggestion for exploiting qudit
+dynamics concerns using a degenerate two-level system with the
+additional freedom perhaps improving the energy gap and thus
+increasing success probability [156].
+A dearth of studies have taken place to date into qudit-based
+adiabatic quantum computing. The one proposal thus far
+concerns a quantum adiabatic algorithm for factorization on
+two qudits [166]. Speciﬁcally, they consider two qudits of
+possibly different dimensions, thus necessitating a hybrid twoqudit gate [39]. They propose a time-dependent effective
+Hamiltonian to realize this two-qudit gate and its realization
+as radio-frequency magnetic ﬁeld pulses. For this model, they
+simulate factorization of each of the numbers 35, 21, and 15 for
+two quadrupole nuclei with spins 3/2 and 1, respectively,
+corresponding to qudit dimensions of 4 and 3, respectively.
+
+d−1
+
+Ω(t) 
+
+|Ωk (t)|2 .
+
+(109)
+
+k0
+
+Then from the two-state solution, we can calculate the dynamics
+of the multipod [97].
+This method of building F minimizes the number and the
+duration of algorithmic steps and thus is fast to implement and, in
+addition, it also provides better protection against detrimental
+effects such as decoherence or imperfections. Due to its
+conceptual simplicity, this method has applications in
+numerous physical systems. Thus, it is one of the most natural
+and simplest realizations of Grover’s algorithm in qudits.
+
+4 ALTERNATIVE MODELS OF QUANTUM
+COMPUTING WITH QUDITS
+The gate-based description of quantum computing is useful to
+establish principles of quantum computing with qudits, similar to
+the case for qubits. There are various approaches to quantum
+computing besides the gate-based model, such as the
+measurement-based [134]; adiabatic quantum computing [3,
+55] and topological quantum computing [57]. Qudit versions
+of these approaches are barely explored to date, and we
+summarize the current status of these studies below.
+
+4.1 Measurement-Based Qudit Computing
+Measurement-based quantum computing was introduced as an
+alternative approach to quantum computing whereby a highly
+entangled state, such as a cluster state [22] or its graph-state
+generalization [70]; is prepared and then computation is
+performed by sequential single-qubit measurements in bases
+that are determined by a constant number of previous
+measurement outcomes [123, 134]. Measurement-based
+quantum computing is appealing in settings where preparing a
+highly entangled many-qubit graph state is feasible, such as
+parallelized controlled-phase operations [134] or cooling to the
+ground-state of a special Hamiltonian [123].
+Measurement-based qudit quantum computing is unexplored to
+date. Preparatory work on generalizing graph states, implicitly
+including the cluster-state special case, to qudit graph states has
+been reported [85]. Regarding implement, qudit-based approaches
+have only been reported for the error-correction aspect of
+measurement-based qubit quantum computing [82]. In this
+approach, the cluster state is envisioned as comprising qudits, with
+the high-dimensional nature of qudits serving to encode qubits for
+error correction. They propose continuous-variable realizations of a
+qudit cluster state in a continuous-variable setting [82].
+
+4.3 Topological Quantum Computing With
+Qudits
+Topological quantum computing offers advantages over other
+forms of quantum computing by reducing quantum error
+correction overheads by exploiting topological protection. Some
+work has been done on topological quantum computing with qudits
+by proposing quantum computing with parafermions [49, 74].
+Majorana fermions are expected to exhibit non-abelian
+statistics, which makes these exotic particles, or their
+quasiparticle analogue, sought after for anyonic quantum
+computing [90]. Majorana fermions can be generalized to Zd
+parafermions, which also exhibit non-abelian statistics and
+reduce to standard Majorana fermions for d  2. One advantage
+
+4.2 Adiabatic Qudit Computing
+Adiabatic quantum computing approaches quantum computing
+by encoding the solution of a computational problem as the
+ground-state of a Hamiltonian whose description is readily
+obtained; the solution is obtained by preparing the ground
+state of a Hamiltonian whose ground-state is efﬁciently
+constructed and then evolving slowly, according to the
+
+Frontiers in Physics | www.frontiersin.org
+
+16
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+of d > 2 is that parafermion braiding is an entangling operation.
+Importantly, encoding a qudit of dimension d in the fourparafermion fusion space enables all single-qudit Clifford gates
+to be generated modulo phase terms [74].
+Clifford gates do not provide a universal set of gates for
+quantum computing. A non-Clifford gate can be achieved for
+parafermions encoded into parafermion zero modes by exploiting
+the Aharonov-Casher effect, physically implemented by move a
+half-ﬂuxon around the parafermionic zero modes. Combining
+this non-Clifford gate with the Clifford gates achieved by
+parafermion braiding yields a universal gate set of non-abelian
+quantum computing with qudits [49].
+
+Here we review a single photon system that has demonstrated a
+proof-of-principle qutrit PEA [106]. In a photonic system, there is
+no deterministic way to interact two photons and thus it is hard to
+build a reliable controlled gate for the photonic qudits. The
+following photonic system bypasses this difﬁculty via using the
+two degrees of freedom on a single photon—i.e., the time-bin and
+frequency-bin to be the two qutrits. The frequency degree of
+freedom carries one qutrit as the control register and the time
+degree of freedom carries another qutrit as the target register. The
+experimental apparatus consists of the well-established techniques
+and ﬁber-optic components: continuous-wave (CW) laser source,
+phase modulator (PM), pulse shaper (PS), intensity modulator
+(IM) and chirped ﬁber Bragg grating (CFBG). The device is divided
+into three parts [106]: 1) A state preparation part that comprises a
+PM followed by a PS and a IM that encodes the initial state to
+qudits; 2) a controlled-gate part that is built with a PM sandwiched
+by two CFBGs to perform the control-U operation; and 3) an
+inverse Fourier transformation comprising a PM and then a PS to
+extract the phase information. Note that the controlled-gate part
+can perform a multi-value-controlled gate that applies different
+operations based on the three unique states of the control qutrit. In
+the PEA procedure, eigenphases can be retrieved with 98% ﬁdelity.
+In addition to having long coherence lifetime, the photonic system
+also has a unique advantage over other common quantum devices,
+i.e., the ability to process and measure thousands of photons
+simultaneously. This allows us to generate statistical patterns
+quickly and infer the phase accurately whereas the normal PEA
+has to use additional qudits on the control register to increase
+accuracy.
+Here we provide an example for the statistical inference of the
+phase based on numerical data generated by the photonic PEA
+experiment just described. The two unitary operations used in the
+experimental setup are
+
+5 IMPLEMENTATIONS OF QUDITS AND
+ALGORITHMS
+The qubit circuit and qubit algorithm have been implemented on
+various physical systems such as defects in solids [27, 81, 120];
+quantum dots [104, 127]; photons [113, 132]; super conducting
+systems [29, 31]; trapped ions [14, 15]; magnetic [7, 18, 32, 148]
+and non-magnetic molecules [30, 152]. For each physical
+representation of the qubit, only two levels of states are used
+to store and process quantum information. However, many
+quantum properties of these physical systems have more than
+two levels, such as the frequency of the photon [106]; energy
+levels of the trapped ions [91]; spin states of the nuclear magnetic
+resonance systems [48] and the spin state of the molecular
+magnetic magnets [115]. Therefore, these systems have the
+potential to represent qudit systems. In this section, we brieﬂy
+review several physical platforms that have been used to
+implement qudit gates or qudit algorithms.
+Although most of the systems have three or four levels
+available for computation, they are extensible to higher level
+systems and scalable to multi-qudit interactions. These pioneer
+implementations of qudit systems show the potential of future
+realization of the more powerful qudit quantum computers that
+have real-life applications.
+
+1 1  diag 1, ω, ω2 ,
+U
+with ω being the cube root of unity Eq. 14, and
+22  diag 1, ei0.351π , ei1.045π .
+U
+
+(111)
+
+In the experiment, photonic qutrits are sent through the control
+and target registers and the state of the control register qutrits is
+measured and counted to obtain the phase information.
+Given the eigenphase ϕ of an eigenstate of the target register,
+the probability for the qutrit output state to fell into \ketn, where
+n ∈ {0, 1, 2}, is
+
+5.1 Time and Frequency Bin of a photon
+Photonic system is a good candidate for quantum computing
+because photons rarely interact with other particles and thus
+have a comparatively long decoherence time. In addition,
+photon has many quantum properties such as the orbital
+angular momentum [9, 52]; frequency-bin [75, 76, 96, 107] and
+time-bin [73, 78] that can be used to represent a qudit. Each of
+these properties provides an extra degrees of freedom for the
+manipulation and computation. Each degree of freedom usually
+has dimensions greater than two and thus can be used as a unique
+qudit. The experimental realization of arbitrary multidimensional
+multiphotonic transformations has been proposed with the help of
+ancilla state, which is achievable via the introduction of a new
+quantum nondemolition measurement and the exploitation of a
+genuine high-dimensional interferometer [60]. Experimental
+entanglement of high-dimensional qudits, where multiple highpurity frequency modes of the photons are in a superposition
+coherently, is also developed and demonstrated [96].
+
+Frontiers in Physics | www.frontiersin.org
+
+(110)
+
+2
+1
+n2π
+n2π 
+C n, ϕ  1 + ei(ϕ− 3 ) + ei2(ϕ− 3 )  .
+9
+
+(112)
+
+Now
+let E0 , E1 , and E2 be the counts of the photons that fell into
+
+0f 〉, 1f 〉, and 2f 〉. The estimated phase, denoted ϕ,
+~ is the phase
+that has the smallest the mean-square error between the
+measured and theoretical results:
+2
+
+min
+~
+ϕ
+
+~
+%En − C%n, ϕ&&
+
+2
+
+(113)
+
+n0
+
+1 1 (110) and U
+1 2 (111) are shown in
+The estimated phases for U
+Table 1 [106]. The ﬁrst experiment with U1 estimates the phase of a
+
+17
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+This evolution operator can perform all kinds of the required
+coherent operations that are acting on any two of the logical
+states. It operates on the system and works essentially as a single
+qutrit gate. All kinds of transitions can be realized by
+manipulating the κ and κ′ coupling. Therefore with the proper
+manipulation of the parameters κ and κ′ we are able to perform
+any arbitrary one-qutrit gate as desired.
+Single qutrit gate alone is not sufﬁcient to form a universal
+computational set, as we need a conditional two-qutrit gate or a
+two-qutirt controlled-gate to achieve universality. To deﬁne the
+conditional two-qutrit gate we need an auxiliary level |0’〉 as
+shown in Figure 14. The conditional two-qutrit gate is achievable
+via the center-of-mass (CM) motion of ions inside
+ the trap. The
+ion CM coupled to the electronic transition |0〉 → q〉 is described
+by the Hamiltonian
+
+eigenvector and gives the eigenvalue. The second experiment with
+U2 estimates the phase of a state with an arbitrary value (not a
+fraction of π), but, by repeating the experiment, the eigenvalue can be
+estimated from the statistical distribution of the results.
+
+5.2 Ion Trap
+Intrinsic spin, an exclusively quantum property, has an inherently
+ﬁnite discrete state space which is a perfect choice for
+representing qubit or qudit. When a charged particle has spin,
+it possess a magnetic momentum and is controllable by external
+electromagneic pulses. This concept leads to the idea of ion trap
+where a set of charged ions are conﬁned by electromagnetic ﬁeld.
+The hyperﬁne (nuclear spin) state of an atom, and lowest level
+vibrational modes (phonons) of the trapped atoms serves as good
+representations of the qudits. The individual state of an atom is
+manipulated with laser pulse and the ions interact with each other
+via a shared phonon state.
+The set-up of an ion trap qutrit system reviewed here can
+perform arbitrary single qutrit gates and a control-not gate [91].
+These two kinds of gates form a universal set and thus can be
+combined to perform various quantum algorithms such as those
+discussed in Section 3. The electronic levels of an ion are shown in
+Figure 14. The energy levels |0〉, |1〉, |2〉 are used to store the
+quantum information of a qutrit. The transition between the levels
+are driven by the classical ﬁelds Ω03 , Ω13 , Ω04 , and Ω24 of the Raman
+transitions through independent channels linked to orthogonal
+polarizations. We ﬁrst develop a system acting as a single qutrit
+gate that can manipulate the energy levels of the ion via Raman
+transitions driven by the classical ﬁelds. The following expressions
+follow those in Ref. 91. For single qutrit gates, where the center-ofmass motion is excluded, we can include the spatial dependence of
+the Raman ﬁelds as phase factors Δ and assuming the conditions
+Δ ≫ Ω04 , Ω03 , Ω31 , Ω42 ,
+
+Hn,q 
+
+This Hamiltonian governs the coherent interaction between
+qutrits and collective CM motion. With appropriate selection
+of effective interaction time and laser polarizations, the CM
+motion coupled to electronic transitions is coherently
+manipulated [91].
+To complete the universal quantum computation requirements,
+we need to develop a measurement scheme. In this scheme, von
+Neumann measurements distinguishing three directions |0〉, |1〉,
+|2〉 are made possible via the resonant interactions from |1〉 and
+|2〉 to states |3〉 and |4〉, respectively. The single and two-qutrit
+controlled gate are combined to perform various qutrit algorithms
+such as the quantum Fourier transform. Other variations of the
+ion-trap qutrit quantum computer designs use trapped ions in the
+presence of a magnetic ﬁeld gradient [111]. The qutrit ion-trap
+computer provides a signiﬁcant increase of the available Hilbert
+space while demanding only the same amount of physical
+resources.
+
+(114)
+
+ 2
+ 2
+ 2  2
+Ω31 
+Ω42 
+Ω30  + Ω40 
+H
+−
+|1〉〈1| −
+|2〉〈2| −
+|0〉〈0|−
+Z
+Δ
+Δ
+Δ
+(115)
+Ω31 Ω*30
+Ω42 Ω*40
+−!
+(116)
+|0〉〈1| +
+|0〉〈2| + hc3.
+Δ
+Δ
+Knowing the Hamiltonian we are able to derive the evolution
+operator in the restricted three-dimensional space spanned by
+{|2〉, |1〉, |0〉} as the following
+
+where φ  Ωt represents interaction time and
+   
+C φ  cosφ − 1, Ω2  κ′ 2 + κ2 .
+
+5.3 Nuclear Magnetic Resonance
+Nuclear magnetic resonance (NMR) is an essential tool in
+chemistry and involves manipulating and detecting molecules’
+nuclear spin states using radio-frequency electromagnetic waves
+[19]. Some technologies of this ﬁeld are sophisticated enough to
+control and observe thousands of nuclei in an experiment. The
+NMR has the potential to scale up quantum computer to
+thousands of qudits [144].
+In this section we review the implementation of a single-qudit
+algorithm that can determine the parity of a permutation on an
+NMR system [48]. The algorithm itself is the parity determining
+algorithm explained in Section 3.1.1. The molecule in this NMR
+setup is embedded in a liquid crystalline environment and the
+strong magnetic ﬁeld is used to adjust the anisotropic molecular
+
+(117)
+
+(118)
+
+The notation g and g’ represents
+g : κ*Ω, g ′  κ′ *Ω, κ : Ω*42 Ω40 *Δ, κ′  Ω*31 Ω30 *Δ.
+
+Frontiers in Physics | www.frontiersin.org
+
+(120)
+
+Here a is the annihilation operator and a† is the creation operator
+of the CM phonons. Ωq is the effective Rabi frequency after
+adiabatic elimination of upper excited levels and ϕ is the laser
+phase, and δ is the detuning. The Lamb-Dicke parameter is
+
+η : Zk2θ 6(2M]x ).
+(121)
+
+the effective Hamiltonian describing the ion in this system is
+
+ 2
+1 + g  C φ
+gg ′ *C φ
+−ig sin φ
+ 2
+⎜
+⎟
+⎞
+⎝ g ′ g*C φ
+U φ  ⎛
+1 + g ′  C φ −ig ′ sin φ ⎠,
+cos φ
+−ig* sin φ
+−ig ′ * sin φ
+
+Ωq η
+4|q〉n 〈0|ae−iδt−iϕ + a† |0n 〉〈q|eiδt+iϕ 5.
+2
+
+(119)
+
+18
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+TABLE 1 | Normalized photon counts and comparison of the true phase ϕ and the
+1 1 (Eq. 110) and U
+12
+experimentally estimated phase ϕ′ for each eigenstate of U
+(Eq. 111) [106].
+11
+U
+Eigenstate
+E0
+E1
+E2
+True Phase, ϕ
+~
+Est. Phase, ϕ
+~
+ϕ−ϕ
+Error, | |
+2π
+
+|0t 〉
+0.9948 ± 0.0004
+0.0023 ± 0.0002
+0.0029 ± 0.0002
+0
+1.972π
+1.4%
+
+|1t 〉
+0.0101 ± 0.0004
+0.9805 ± 0.0009
+0.0094 ± 0.0004
+2π/3
+0.612π
+2.7%
+
+|2t 〉
+0.0122 ± 0.0005
+0.0120 ± 0.0005
+0.9758 ± 0.0010
+4π/3
+1.394π
+3.0%
+
+|1t 〉
+0.316 ± 0.003
+0.530 ± 0.003
+0.154 ± 0.002
+0.3511π
+0.377π
+1.3%
+
+|2t 〉
+0.143 ± 0.002
+0.318 ± 0.003
+0.539 ± 0.003
+1.045π
+1.045π
+0.0%
+
+12
+U
+Eigenstate
+E0
+E1
+E2
+True Phase, ϕ
+~
+Est. Phase, ϕ
+~
+ϕ−ϕ
+Error, | |
+2π
+
+|0t 〉
+0.878 ± 0.002
+0.032 ± 0.001
+0.090 ± 0.002
+0
+1.859π
+7.1%
+
+FIGURE 14 | Electronic level structure of the trapped ion. The carrier of
+the quantum information is the qutrit states |0〉, |1〉, and |2〉. |0’〉 is an auxiliary
+level used for the conditional two-qutrit gate.
+
+molecules, which have a long life-time, are used to store the
+quantum information. This information is read out by the
+electronic states. In the mean time, the robustness of the
+molecule allows it to conserve its molecular, electronic and
+magnetic characteristics at high temperatures [116].
+As one of the SMMs, the single molecule TbPc2 complex
+reviewed in this section possesses all necessary properties such as
+long lifetime and robustness. These properties are integrated as
+important components of a serious quantum mechanical devices, for
+examples, resonator [59]; molecular spin valve [149] and transistor
+[138, 146]. TbPc2 gains its SMM properties from the strong
+spinâ€“orbit coupling of lanthanide ions and the ligand ﬁeld [77].
+Magnetic properties of TbPc2 are governed by the Hamiltonian:
+
+orientation. This adding a ﬁnite quadrupolar coupling term to the
+Hamiltonian which is as follows
+H  −ω0 Iz + Λ 3Iz2 − I 2 ,
+
+(122)
+
+where Λ  e2 qQS/4 is the effective value of the quadrupolar
+coupling [48]. The Fourier transformation is implemented by
+a sequence of three transition-selective pulses. A series of
+combinations of 180+ pulses, both transition-selective and
+non-selective, is used to implement the permutations.
+Final states of the system can be derived from a single projective
+measurement. Pseudopure spin states act as approximation of
+effect of the system on an ensemble NMR quantum computer
+since it is impossible to do the true projective measurements [98].
+The ﬁdelity measurement of the experiment is given as
+F : 
+
+tr%ρ†th ρexpt &
+
+tr ρ†th ρth  tr%ρ†expt ρexpt &
+
+1
+H  Hlf + gJ μ0 μB J · H + Ahf I · J + Iz2 − (I + 1)I ,
+3
+
+where Hlf is the ligand ﬁeld Hamiltonian (lf), and gJ μ0 μB J · H
+represents the Zeeman energy. Ahf I · J accounts for hyperﬁne
+interactions (hf) and Iz2 − 13 (I + 1)I is the quadrupole term. A
+sweeping magnetic ﬁeld associated with mI  ± 12 and ± 32 can
+cause quantum tunneling of magnetization, which preserves
+nuclear spin while changing electronic magnetic moment. This
+ﬁeld enables nuclear-spin measurement by suspending the TbPc2
+molecule on carbon nanotubes (CNT) and between gold junctions.
+This measurement uses the technique of electro-migration.
+Initialization and manipulation of the four spin states of TbPc2
+can be obtained from QTM transitions driven by external
+magnetic ﬁeld.
+The
+transitions between the
+
+
+
+ramping
++1〉↔−1〉 states and +3〉↔−3〉 is achieved via applying
+2
+2
+2
+2
+appropriate resonate frequencies ]12 and ]23 . Relaxation and
+coherence times are important aspects to be analyzed for the
+TbPc2 system, and this process is accomplished by imaging the
+initialized nuclear spin trajectory in real-time.
+Statistical analysis of the nuclear spin coherence time makes use
+of the spinâ€“lattice relaxation times by ﬁtting the data for an
+exponential form (y  exp(−t/T1 )) and yields T1 ≈ 17 s for mI 
+± 12 and T1 ≈ 34s for mI  ± 32 with ﬁdelities of
+F mI  ± 12 ≈ 93% and F mI  ± 32 ≈ 87% accordingly [115].
+The TbPc2 SMM can be used to execute Grover’s algorithm, where
+the alternation of the mI state contained in the TbPc2 molecular
+qubit are treated by resonance frequencies [63, 99].
+
+(123)
+
+is used, where ρth and ρexpt are, respectively, theoretically expected
+and experimentally obtained density matrices. Fidelities obtained
+for these proposed operations are 0.92 and above.
+Another set-up of the same algorithm treats a single quart
+[62]. The algorithm implementation is achieved using a spinâ€“32
+nuclei, which is commonly selected for NMR-QIP applications.
+In their NMR systems the four energy levels needed is made via
+the Zeeman splitting using a strong static magnetic ﬁeld. All of the
+two implementations of the single-qudit algorithm show that the
+NMR system provides a way to realize a reliable and efﬁcient
+qudit system for the quantum computing.
+
+5.4 Molecular Magnets
+Molecular quantum magnets, also called the single-molecule
+magnets (SMM), provides another physical representation of
+qudits [115]. They have phenomenal magnetic characteristics
+and can be manipulated via chemical means. This enables the
+alternation of the ligand ﬁeld of the spin carriers and the
+interaction between the SMM with the other units. As pointed
+out in one of the proposals, the nuclear spin states of the
+
+Frontiers in Physics | www.frontiersin.org
+
+(124)
+
+19
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+6 SUMMARY AND FUTURE OUTLOOK OF
+QUDIT SYSTEM
+
+qudits is more advantageous if the qudits are entangled. The
+entanglement becomes more robust by increasing the dimension
+of the qudits while ﬁxing their numbers. In other words, as the
+noise sources act locally on every system, increasing the
+dimension d will reduce the number of systems and thus
+reduce the effect of noise resulting in the robustness increase
+[103]. The increasing noise level tolerance as the qudit dimension
+increases can be shown on an photonic OAM system as an
+example of its implementation [51].
+In summary the qudit system possesses advantages in the
+circuit design, physical implementation and has the potential to
+outperform the qubit system in various applications.
+
+6.1 Summary of the Advantages of Qudit
+Systems Compared to Qubit Systems
+Throughout the article we discuss and review many aspects of the
+qudit systems such as qudit gates, qudit algorithms, alternative
+computation models and implementations. Most gates and
+algorithms based on qudits have some advantages over those
+for qubits, such as shorter computational time, lower requirement
+of resources, higher availability, and the ability to solve more
+complex problems. The qudit system, with its high-dimensional
+nature, can provide more degrees of freedom and larger
+computational space. This section summarizes the advantages
+of the qudit system compared to the qubit system.
+Qudit gates have the advantage of a larger working Hilbert space
+which reduces the number of qudits needed to represent an
+arbitrary unitary matrix. In our discussion of universality in
+Section 2.1.2, the qudit method proposed by Muthukrishnan
+and Stroud’s has a (log2 d)2 scaling advantage over the qubit
+case. Furthermore, Luo and Wang show that with their
+proposed universal computation scheme [108]; there is an extra
+factor of n reduction in the gate requirement, where n is the number
+of qudits. By introducing qudits to the construction of some wellknown gates such as the Toffoli gate, the elementary gate required
+are reduced from 12n − 11 gates in the qubit case to 2n − 1 gates by
+introducing a single (n + 1)-level target carrier [133] and to 2n − 3
+gates by utilizing the topological properties [89]. In our discussion
+of the geometrically quantiﬁed qudit-gate efﬁciency in Section 2.3,
+the qubit system needs O(n6 d(I, U)3 ) one- and two-qubit gates to
+synthesize a unitary [122] while in the qutrit case the lower bound is
+O(nk d(I, U)3 ) where k is an integer that depends on the accuracy
+of the approximation and can be smaller than 6 [100].
+For many of the physical systems such as photons [113, 132];
+super conducting systems [29, 31]; trapped ions [14, 15]; magnetic
+[7, 18, 32, 148] and non-magnetic molecules [30, 152] there are
+usually more than two available physical states available for the
+applications. The qudit system has a higher efﬁciency utilizing those
+extra states than the qubit system. Also using the photonic system,
+we can perform the multi-level controlled gate (Section 2.2) which
+can perform multiple control operations at and same time and
+largely reduce the number of controlled gates requirement [106].
+Other than computation, the qudit also has advantages in
+quantum communication as it possesses a higher noise resilience
+than the qubit [36]. The qudit system has a higher quantum bit
+error rate (QBER), which is a measure of resistance to the
+environmental noise or eavesdropping attacks, compared to
+the qubit system. The higher noise tolerance of the qudits
+helps to increase the secret key rate as it can be shown that
+the secret key rate increases as the Hilbert space dimensions
+increase at the same noise level [140]. Notice that in practical
+situation, the qudit system performed on each particular physical
+apparatus has varied amount of advantages than the qubit and
+there might be cases in which the high-dimensional states have a
+higher transmission distance [36]. This higher noise resilience of
+
+Frontiers in Physics | www.frontiersin.org
+
+6.2 Future Outlook of Qudit System
+This review article introduces the basics of the high-dimensional
+qudit systems and provides details about qudit gates, qudit
+algorithms and implementations on various physical systems.
+The article serves as a summary of recent developments of qudit
+quantum computing and an introduction for newcomers to the
+ﬁeld of qudit quantum computing. Furthermore we show the
+advantages and the potential for qudit systems to outperform
+qubit counterparts. Of course these advantages can come with
+challenges such as possibly harder-to-implement universal gates,
+benchmarking [80, 94, 117]; characterization of qudit gate [68,
+136] and error correction connected with the complexity of the
+Clifford hierarchy for qudits [157].
+Compared to qubit systems, qudit systems currently have
+received less attention in both theoretical and experimental
+studies. However, qudit quantum computing is becoming
+increasingly important as many topics and problems in this
+ﬁeld are ripe for exploration. Extending from qubits to qudits
+uses in some mathematical challenges, with these mathematical
+problems elegant and perhaps giving new insights into quantum
+computing in their own right. Connections between quantum
+resources such as entanglement, quantum algorithms and their
+improvements, scaling up qudit systems both to higher
+dimension and to more particles, benchmarking and error
+correction, and the bridging between qudits and continuousvariable quantum computing [67] are examples of the fantastic
+research directions in this ﬁeld of high-dimensional quantum
+computing.
+
+AUTHOR CONTRIBUTIONS
+All authors discussed the relevant materials to be added and all
+participated in writing the article.
+
+ACKNOWLEDGMENTS
+We would like to acknowledge the ﬁnancial support by the
+National Science Foundation under award number 1839191ECCS. BCS appreciates ﬁnancial support from NSERC and
+from the Alberta government.
+
+20
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+REFERENCES
+
+26. Cao Y, Peng S-G, Zheng C, Long G-L. Quantum fourier transform and phase
+estimation in qudit system. Commun Theor Phys (2011) 55:790–4. doi:10.
+1088/0253-6102/55/5/11
+27. Childress L, Gurudev Dutt MV, Taylor JM, Zibrov AS, Jelezko F, Wrachtrup J,
+et al. Coherent dynamics of coupled electron and nuclear spin qubits in
+diamond. Science (2006) 314:281–5. doi:10.1126/science.1131871
+28. Childs AM. Secure assisted quantum computation (2001) arXiv:quant-ph/
+0111046.
+29. Chiorescu I, Nakamura Y, Harmans CJPM, Mooij JE. Coherent quantum
+dynamics of a superconducting ﬂux qubit. Science (2003) 299:1869–71. doi:10.
+1126/science.1081045
+30. Chuang IL, Vandersypen LMK, Zhou X, Leung DW, Lloyd S. Experimental
+realization of a quantum algorithm. Nature (1998) 393:143. doi:10.1038/30181
+31. Clarke J, Wilhelm FK. Superconducting quantum bits. Nature (2008) 453:
+1031–42. doi:10.1038/nature07128
+32. Clemente-Juan JM, Coronado E, Gaita-Ariño A. Magnetic polyoxometalates:
+from molecular magnetism to molecular spintronics and quantum computing.
+Chem Soc Rev (2012) 41:7464–78. doi:10.1039/c2cs35205b
+33. Cleve R, Ekert A, Macchiavello C, Mosca M. Quantum algorithms revisited.
+Proc Roy Soc Lond A (1998) 454:339–54. doi:10.1098/rspa.1998.0164
+34. Coppersmith D. An approximate Fourier transform useful in quantum
+factoring(2002) arXiv preprint quant-ph/0201067.
+35. Cory DG, Price MD, Maas W, Knill E, Laﬂamme R, Zurek WH, et al.
+Experimental quantum error correction. Phys Rev Lett (1998) 81:2152–5.
+doi:10.1103/PhysRevLett.81.2152
+36. Cozzolino D, Da Lio B, Bacco D, Oxenløwe LK. High-dimensional quantum
+communication: beneﬁts, progress, and future challenges. Adv Quantum Tech
+(2019) 2:1900038. doi:10.1002/qute.201900038
+37. Cui SX, Hong S-M, Wang Z. Universal quantum computation with weakly
+integral anyons. Quant Inf Process (2015) 14:2687–727. doi:10.1007/s11128015-1016-y
+38. Cui SX, Wang Z. Universal quantum computation with metaplectic anyons.
+J Math Phys (2015) 56:032202. doi:10.1063/1.4914941
+39. Daboul J, Wang X, Sanders BC. Quantum gates on hybrid qudits. J Phys Math
+Gen (2003) 36:2525–36. doi:10.1088/0305-4470/36/10/312
+40. Das A, Chakrabarti BK. Colloquium: quantum annealing and analog quantum
+computation. Rev Mod Phys (2008) 80:1061–81. doi:10.1103/RevModPhys.80.
+1061
+41. Daskin A, Grama A, Kollias G, Kais S. Universal programmable quantum
+circuit schemes to emulate an operator. J Chem Phys (2012) 137:234112.
+doi:10.1063/1.4772185
+42. Daskin A, Kais S. Decomposition of unitary matrices for ﬁnding quantum
+circuits: application to molecular hamiltonians. J Chem Phys (2011) 134:
+144112. doi:10.1063/1.3575402
+43. Dennis E. Toward fault-tolerant quantum computation without
+concatenation. Phys Rev A (2001) 63:052314. doi:10.1103/PhysRevA.63.
+052314
+44. Deutsch D. Quantum theory, the Church–Turing principle and the
+universal quantum computer. J Phys (1985) 400:97–117. doi:10.1098/
+rspa.1985.0070
+45. Deutsch DP, Jozsa R. Rapid solution of problems by quantum computation.
+Proc Roy Soc Lond A (1992) 439:553–8. doi:10.1098/rspa.1992.0167
+46. Di Y-M, Wei H-R. Synthesis of multivalued quantum logic circuits by
+elementary gates. Phys Rev A (2013) 87:012325. doi:10.1103/PhysRevA.87.
+012325
+47. DiVincenzo DP. Two-bit gates are universal for quantum computation. Phys
+Rev A (1995) 51:1015. doi:10.1103/physreva.51.1015
+48. Dogra S, Arvind, Dorai K. Determining the parity of a permutation using an
+experimental nmr qutrit. Phys Lett (2014) 378:3452–6. doi:10.1016/j.physleta.
+2014.10.003
+49. Dua A, Malomed B, Cheng M, Jiang L. Universal quantum computing with
+parafermions assisted by a half-ﬂuxon. Phys Rev B (2019) 100:144508. doi:10.
+1103/PhysRevB.100.144508
+50. Eastin B, Knill E. Restrictions on transversal encoded quantum gate sets. Phys
+Rev Lett (2009) 102:110502. doi:10.1103/PhysRevLett.102.110502
+51. Ecker S, Bouchard F, Bulla L, Brandt F, Kohout O, Steinlechner F, et al.
+Overcoming noise in entanglement distribution. Phys Rev X (2019) 9:041042.
+doi:10.1103/physrevx.9.041042
+
+1. Abrams DS, Lloyd S. Quantum algorithm providing exponential speed increase
+for ﬁnding eigenvalues and eigenvectors. Phys Rev Lett (1999) 83:5162–5.
+doi:10.1103/PhysRevLett.83.5162
+2. Adcock MRA, Høyer P, Sanders BC. Quantum computation with coherent spin
+states and the close Hadamard problem. Quant Inf Process (2016) 15:1361–86.
+doi:10.1007/s11128-015-1229-0
+3. Aharonov D, van Dam W, Kempe J, Landau Z, Lloyd S, Regev O. Adiabatic
+quantum computation is equivalent to standard quantum computation. SIAM
+J Comput (2007) 37:166–94. doi:10.1137/S0097539705447323
+4. Alber G, Delgado A, Gisin N, Jex I. Efﬁcient bipartite quantum state puriﬁcation
+in arbitrary dimensional Hilbert spaces. J Phys Math Gen (2001) 34:8821–33.
+doi:10.1088/0305-4470/34/42/307
+5. Amin MHS, Dickson NG, Smith P. Adiabatic quantum optimization with
+qudits. Quant Inf Process (2013) 12:1819–29. doi:10.1007/s11128-012-0480-x
+6. Anwar H, Campbell ET, Browne DE. Qutrit magic state distillation. New J Phys
+(2012) 14:063006. doi:10.1088/1367-2630/14/6/063006
+7. Aromí G, Aguilà D, Gamez P, Luis F, Roubeau O. Design of magnetic
+coordination complexes for quantum computing. Chem Soc Rev (2012) 41:
+537–46. doi:10.1039/c1cs15115k
+8. Aspuru-Guzik A, Dutoi AD, Love PJ, Head-Gordon M. Simulated quantum
+computation of molecular energies. Science (2005) 309:1704–7. doi:10.1126/
+science.1113479
+9. Babazadeh A, Erhard M, Wang F, Malik M, Nouroozi R, Krenn M, et al. Highdimensional single-photon quantum gates: concepts and experiments. Phys Rev
+Lett (2017) 119:180510. doi:10.1103/PhysRevLett.119.180510
+10. Barends R, Kelly J, Megrant A, Veitia A, Sank D, Jeffrey E, et al.
+Superconducting quantum circuits at the surface code threshold for fault
+tolerance. Nature (2014) 508:500–3. doi:10.1038/nature13171
+11. Bartlett SD, de Guise H, Sanders BC. Quantum encodings in spin systems and
+harmonic oscillators. Phys Rev A (2002) 65:052316. doi:10.1103/PhysRevA.65.052316
+12. Bernstein E, Vazirani U. Quantum complexity theory. SIAM J Comput (1997)
+26:1411–73. doi:10.1137/S0097539796300921
+13. Bian T, Murphy D, Xia R, Daskin A, Kais S. Quantum computing methods for
+electronic states of the water molecule. Mol Phys (2019) 117:2069–82. doi:10.
+1080/00268976.2019.1580392
+14. Blatt R, Wineland D. Entangled states of trapped atomic ions. Nature (2008)
+453:1008–15. doi:10.1038/nature07125
+15. Bloch I. Quantum coherence and entanglement with ultracold atoms in optical
+lattices. Nature (2008) 453:1016–22. doi:10.1038/nature07126
+16. Bocharov A, Cui SX, Roetteler M, Svore KM. Improved quantum ternary
+arithmetic. Quant Inf Comput (2016) 16:862–884. doi:10.5555/3179473.3179481
+17. Bocharov A, Roetteler M, Svore KM. Factoring with qutrits: shor’s algorithm
+on ternary and metaplectic quantum architectures. Phys Rev A (2017) 96:
+012306. doi:10.1103/PhysRevA.96.012306
+18. Bogani L, Wernsdorfer W. Molecular spintronics using single-molecule
+magnets. In Nanoscience and technology: a collection of reviews from nature
+journals. Singapore: World Scientiﬁc (2010) p. 194–201.
+19. Bovey FA, Mirau PA, Gutowsky H. Nuclear magnetic resonance spectroscopy.
+New York, NY: Elsevier (1988)
+20. Boykin PO, Mor T, Pulver M, Roychowdhury V, Vatan F. A new universal and
+fault-tolerant quantum basis. Inf Process Lett (2000) 75:101–7. doi:10.1016/
+s0020-0190(00)00084-3
+21. Brennen G, O’Leary D, Bullock S. Criteria for exact qudit universality. Phys Rev
+A (2005) 71:052318. doi:10.1103/PhysRevA.71.052318
+22. Briegel HJ, Raussendorf R. Persistent entanglement in arrays of interacting
+particles. Phys Rev Lett (2001) 86:910–3. doi:10.1103/PhysRevLett.86.910
+23. Brylinski J-L, Brylinski R. Universal quantum gates In: Brylinski RK, Chen G,
+editors Mathematics of quantum computation. Boca Raton, FL Chapman and
+Hall/CRC (2002) p. 117–34.
+24. Bullock S, O’Leary D, Brennen G. Asymptotically optimal quantum circuits
+ford-level systems. Phys Rev Lett (2005) 94:230502. doi:10.1103/PhysRevLett.
+94.230502
+25. Campbell ET, Anwar H, Browne DE. Magic-state distillation in all prime
+dimensions using quantum Reed-Muller codes. Phys Rev X (2012) 2:041021.
+doi:10.1103/PhysRevX.2.041021
+
+Frontiers in Physics | www.frontiersin.org
+
+21
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+from an on-chip silicon nitride microresonator. Opt Express (2018) 26:
+1825–40. doi:10.1364/oe.26.001825
+77. Ishikawa N, Sugita M, Okubo T, Tanaka N, Iino T, Kaizu Y. Determination of
+ligand-ﬁeld parameters and f-electronic structures of double-decker
+bis(phthalocyaninato)lanthanide complexes. Inorg Chem (2003) 42:2440–6.
+doi:10.1021/ic026295u
+78. Islam NT, Lim CCW, Cahall C, Kim J, Gauthier DJ. Provably secure and highrate quantum key distribution with time-bin qudits. Sci Adv (2017) 3:
+e1701491. doi:10.1126/sciadv.1701491
+79. Ivanov SS, Tonchev HS, Vitanov NV. Time-efﬁcient implementation of
+quantum search with qudits. Phys Rev A (2012) 85:062321. doi:10.1103/
+PhysRevA.85.062321
+80. Jafarzadeh M, Wu Y-D, Sanders YR, Sanders BC. Randomized benchmarking
+for qudit Clifford gates. New J Phys (2020) 22:063014. doi:10.1088/1367-2630/
+ab8ab1
+81. Jelezko F, Gaebel T, Popa I, Domhan M, Gruber A, Wrachtrup J. Observation
+of coherent oscillation of a single nuclear spin and realization of a two-qubit
+conditional quantum gate. Phys Rev Lett (2004) 93:130501. doi:10.1103/
+PhysRevLett.93.130501
+82. Joo J, Lee C-W, Kono S, Kim J. Logical measurement-based quantum
+computation in circuit-qed. Sci Rep (2019) 9:16592. doi:10.1038/s41598019-52866-3
+83. Kadowaki T, Nishimori H. Quantum annealing in the transverse ising model.
+Phys Rev E (1998) 58:5355–63. doi:10.1103/PhysRevE.58.5355
+84. Kais S. Introduction to quantum information and computation for chemistry.
+Quantum Inf Comput Chem (2014) 154:1–38. doi:10.1002/9781118742631.ch01
+85. Keet A, Fortescue B, Markham D, Sanders BC. Quantum secret sharing with
+qudit graph states. Phys Rev A (2010) 82:062315. doi:10.1103/PhysRevA.82.
+062315
+86. Kessel AR, Yakovleva NM. Implementation schemes in NMR of quantum
+processors and the Deutsch-Jozsa algorithm by using virtual spin
+representation. Phys Rev A (2002) 66:062322. doi:10.1103/PhysRevA.66.062322
+87. Khan FS, Perkowski M. Synthesis of multi-qudit hybrid and d-valued quantum
+logic circuits by decomposition. Theor Comput Sci (2006) 367:336–46. doi:10.
+1016/j.tcs.2006.09.006
+88. Kiktenko EO, Fedorov AK, Strakhov AA, Man’ko VI. Single qudit realization
+of the Deutsch algorithm using superconducting many-level quantum circuits.
+Phys Lett A (2015) 379:1409–13. doi:10.1016/j.physleta.2015.03.023
+89. Kiktenko EO, Nikolaeva AS, Xu P, Shlyapnikov GV, Fedorov AK. Scalable
+quantum computing with qudits on a graph. Phys Rev A (2020) 101:022304.
+doi:10.1103/PhysRevA.101.022304
+90. Kitaev AY. Fault-tolerant quantum computation by anyons. Ann Phys (2003)
+303:2–30. doi:10.1016/s0003-4916(02)00018-0
+91. Klimov AB, Guzmán R, Retamal JC, Saavedra C. Qutrit quantum computer
+with trapped ions. Phys Rev A (2003) 67:062313. doi:10.1103/PhysRevA.67.
+062313
+92. Klyachko AA, Can MA, Binicioğlu S, Shumovsky AS. Simple test for hidden
+variables in spin-1 systems. Phys Rev Lett (2008) 101:020403. doi:10.1103/
+PhysRevLett.101.020403
+93. Kochen S, Specker EP. The problem of hidden variables in quantum mechanics.
+Dordrecht, Netherlands: Springer Netherlands (1975) p. 293–328. doi:10.1007/
+978-94-010-1795-4_17
+94. Kononenko M, Yurtalan M, Shi J, Lupascu A. Characterization of control in a
+superconducting qutrit using randomized benchmarking (2020) arXiv
+preprint arXiv:2009.00599.
+95. Krishna R, Makwana V, Suresh AP. A generalization of Bernstein-Vazirani
+algorithm to qudit systems (2016) arXiv preprint arXiv:1609.03185.
+96. Kues M, Reimer C, Roztocki P, Cortés LR, Sciara S, Wetzel B, et al. On-chip
+generation of high-dimensional entangled quantum states and their
+coherent control. Nature (2017) 546:622–6. doi:10.1038/4650310.1038/
+nature22986
+97. Kyoseva ES, Vitanov NV. Coherent pulsed excitation of degenerate multistate
+systems: exact analytic solutions. Phys Rev A (2006) 73:023420. doi:10.1103/
+PhysRevA.73.023420
+98. Lee J-S, Khitrin AK. Projective measurement in nuclear magnetic resonance.
+Appl Phys Lett (2006) 89:074105. doi:10.1063/1.2425191
+99. Leuenberger MN, Loss D. Quantum computing in molecular magnets. Nature
+(2001) 410:789. doi:10.1038/35071024
+
+52. Erhard M, Fickler R, Krenn M, Zeilinger A. Twisted photons: new quantum
+perspectives in high dimensions. Light Sci Appl (2018) 7:17146. doi:10.1038/
+lsa.2017.146
+53. Fan Y. A generalization of the Deutsch-Jozsa algorithm to multi-valued quantum
+logic. In: 37th international symposium on multiple-valued logic (ISMVL’07);
+2007 May 13-16; Oslo, Norway (2007) ,p. 12. doi:10.1109/ISMVL.2007.3
+54. Fan Y. Applications of multi-valued quantum algorithms (2008) arXiv:
+0809.0932. doi:10.1109/ISMVL.2007.3
+55. Farhi E, Goldstone J, Gutmann S, Sipser M. Quantum computation by
+adiabatic evolution (2000) arXiv:quant-ph/0001106.
+56. Finnila AB, Gomez MA, Sebenik C, Stenson C, Doll JD. Quantum annealing: a
+new method for minimizing multidimensional functions. Chem Phys Lett
+(1994) 219:343–8. doi:10.1016/0009-2614(94)00117-0
+57. Freedman MH, Larsen M, Wang Z. A modular functor which is universalÂ¶for
+quantum computation. Commun Math Phys (2002) 227:605–22. doi:10.1007/
+s002200200645
+58. Fujii K. Exchange gate on the qudit space and fock space. J Opt B Quantum
+Semiclassical Opt (2003) 5:S613–S618. doi:10.1088/1464-4266/5/6/011
+59. Ganzhorn M, Klyatskaya S, Ruben M, Wernsdorfer W. Strong spin-phonon
+coupling between a single-molecule magnet and a carbon nanotube
+nanoelectromechanical system. Nat Nanotechnol (2013) 8:165. doi:10.1038/
+nnano.2012.258
+60. Gao X, Erhard M, Zeilinger A, Krenn M. (2020) Computer-inspired concept
+for high-dimensional multipartite quantum gates. Phys Rev Lett 125, 050501.
+doi:10.1103/PhysRevLett.125.050501
+61. Garcia-Escartin JC, Chamorro-Posada P. A swap gate for qudits. Quant Inf
+Process (2013) 12:3625–31. doi:10.1007/s11128-013-0621-x
+62. Gedik Z, Silva IA, Lie akmak B, Karpat G, Vidoto ELG, Soares-Pinto DO, et al.
+Computational speed-up with a single qudit. Sci Rep (2015) 5:14671. doi:10.
+1038/srep14671
+63. Godfrin C, Ferhat A, Ballou R, Klyatskaya S, Ruben M, Wernsdorfer W, et al.
+Operating quantum states in single magnetic molecules: implementation of
+grover’s quantum algorithm. Phys Rev Lett (2017) 119:187702. doi:10.1103/
+physrevlett.119.187702
+64. Gottesman D. Theory of fault-tolerant quantum computation. Phys Rev (1998)
+57:127–37. doi:10.1103/PhysRevA.57.127
+65. Gottesman D. Fault-tolerant computation with higher-dimensional systems.
+In: Williams CP, editor. Lecture notes in computer science NASA international
+conference on quantum computing and quantum communications; Vol. 1509.
+Berlin: Springer (1999) ,p 302–13.
+66. Gottesman D, Chuang IL. Demonstrating the viability of universal quantum
+computation using teleportation and single-qubit operations. Nature (1999)
+402:390–3. doi:10.1038/46503Google Scholar
+67. Gottesman D, Kitaev A, Preskill J. Encoding a qubit in an oscillator. Phys Rev
+(2001) 64:012310. doi:10.1103/physreva.64.012310
+68. Gualdi G, Licht D, Reich DM, Koch CP. Efﬁcient Monte Carlo characterization
+of quantum operations for qudits. Phys Rev A (2014) 90:032317. doi:10.1103/
+physreva.90.032317
+69. Harrow AW, Hassidim A, Lloyd S. Quantum algorithm for linear systems of
+equations. Phys Rev Lett (2009) 103:150502. doi:10.1103/PhysRevLett.103.
+150502
+70. Hein M, Eisert J, Briegel HJ. Multiparty entanglement in graph states. Phys Rev
+A (2004) 69:062311. doi:10.1103/PhysRevA.69.062311
+71. Howard M, Vala J. Qudit versions of the qubitπ/8gate. Phys Rev A (2012) 86:
+022316. doi:10.1103/PhysRevA.86.022316
+72. Howard M, Wallman J, Veitch V, Emerson J. Contextuality supplies the
+’magic’ for quantum computation. Nature (2014) 510:351. doi:10.1038/
+nature13460
+73. Humphreys PC, Metcalf BJ, Spring JB, Moore M, Jin X-M, Barbieri M, et al.
+Linear optical quantum computing in a single spatial mode. Phys Rev Lett
+(2013) 111:150501. doi:10.1103/PhysRevLett.111.150501
+74. Hutter A, Loss D. Quantum computing with parafermions. Phys Rev B (2016)
+93:125105. doi:10.1103/PhysRevB.93.125105
+75. Imany P, Jaramillo-Villegas JA, Alshaykh MS, Lukens JM, Odele OD, Moore
+AJ, et al. High-dimensional optical quantum logic in large operational spaces.
+npj Quantum Inf. (2019) 5. doi:10.1038/s41534-019-0173-8
+76. Imany P, Jaramillo-Villegas JA, Odele OD, Han K, Leaird DE, Lukens JM, et al.
+50-ghz-spaced comb of high-dimensional frequency-bin entangled photons
+
+Frontiers in Physics | www.frontiersin.org
+
+22
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+127. Nowack KC, Koppens FHL, Nazarov YV, Vandersypen LMK. Coherent
+control of a single electron spin with electric ﬁelds. Science (2007) 318:
+1430–3. doi:10.1126/science.1148092
+128. Pan J, Cao Y, Yao X, Li Z, Ju C, Chen H, et al. Experimental realization of
+quantum algorithm for solving linear systems of equations. Phys Rev A (2014)
+89:022313. doi:10.1103/physreva.89.022313
+129. Parasa V, Perkowski M. Quantum phase estimation using multivalued logic.
+In: 2011 41st IEEE international symposium on multiple-valued logic
+Tuusula, Finland: Institute of Electrical and Electronics Engineers (IEEE);
+2011. p. 224–9. doi:10.1109/ISMVL.2011.47
+130. Patera J, Zassenhaus H. The Pauli matrices in n dimensions and ﬁnest
+gradings of simple Lie algebras of type An−1. J Math Phys (1988) 29:665–73.
+doi:10.1063/1.528006
+131. Paz-Silva GA, Rebić S, Twamley J, Duty T. Perfect mirror transport protocol
+with higher dimensional quantum chains. Phys Rev Lett (2009) 102:020503.
+doi:10.1103/PhysRevLett.102.020503
+132. Prevedel R, Walther P, Tiefenbacher F, Böhi P, Kaltenbaek R, Jennewein T,
+et al. High-speed linear optics quantum computing using active feed-forward.
+Nature (2007) 445:65–9. doi:10.1038/nature05346
+133. Ralph TC, Resch KJ, Gilchrist A. Efﬁcient Toffoli gates using qudits. Phys Rev
+A (2007) 75:022313. doi:10.1103/PhysRevA.75.022313
+134. Raussendorf R, Briegel HJ. A one-way quantum computer. Phys Rev Lett
+(2001) 86:5188–91. doi:10.1103/PhysRevLett.86.5188
+135. Reck M, Zeilinger A, Bernstein HJ, Bertani P. Experimental realization of any
+discrete unitary operator. Phys Rev Lett (1994) 73:58–61. doi:10.1103/
+PhysRevLett.73.58
+136. Reich DM, Gualdi G, Koch CP. Optimal qudit operator bases for efﬁcient
+characterization of quantum gates. J Phys Math Theor (2014) 47:385305.
+doi:10.1088/1751-8113/47/38/385305
+137. Rowe DJ, Sanders BC, de Guise H. Representations of the Weyl group and
+Wigner functions for SU(3). J Math Phys (1999) 40:3604–15. doi:10.1063/1.
+532911
+138. Sawerwain M, Leoński W. Quantum circuits based on qutrits as a tool for
+solving systems of linear equations (2013) arXiv:1309.0800.
+139. Shende VV, Bullock SS, Markov IL. Synthesis of quantum-logic circuits. IEEE
+Trans Comput Aided Des Integrated Circ Syst (2006) 25:1000–10. doi:10.
+1109/TCAD.2005.855930
+140. Sheridan L, Scarani V. Security proof for quantum key distribution using
+qudit systems. Phys Rev A (2010) 82:030301. doi:10.1103/physreva.82.
+030301
+141. Shi Y. Both Toffoli and controlled-NOT need little help to do universal
+quantum computation (2002) arXiv preprint quant-ph/0205115.
+142. Shor PW. Algorithms for quantum computation: discrete logarithms and
+factoring. In: Proceedings 35th annual symposium on foundations of
+computer science 1994 Nov 20–22; Santa Fe, NM (1994) p. 124–34.
+doi:10.1109/SFCS.1994.365700
+143. Shor PW. Polynomial-time algorithms for prime factorization and discrete
+logarithms on a quantum computer. SIAM Rev (1999) 41:303–32. doi:10.
+1137/s0036144598347011
+144. Slichter CP. Principles of magnetic resonance. vol. 1. Berlin/Heidelberg,
+Germany: Springer Science & Business Media (2013)
+145. Stroud AMCR. Quantum fast fourier transform using multilevel atoms. J Mod
+Optic (2002) 49:2115–27. doi:10.1080/09500340210123947
+146. Thiele S, Balestro F, Ballou R, Klyatskaya S, Ruben M, Wernsdorfer W.
+Electrically driven nuclear spin resonance in single-molecule magnets. Science
+(2014) 344:1135–8. doi:10.1126/science.1249802
+147. Tonchev HS, Vitanov NV. Quantum phase estimation and quantum
+counting with qudits. Phys Rev A (2016) 94:042307. doi:10.1103/
+PhysRevA.94.042307
+148. Troiani F, Affronte M. Molecular spins for quantum information
+technologies. Chem Soc Rev (2011) 40:3119–29. doi:10.1039/c0cs00158a
+149. Urdampilleta M, Klyatskaya S, Cleuziou J-P, Ruben M, Wernsdorfer W.
+Supramolecular spin valves. Nat Mater (2011) 10:502. doi:10.1038/nmat3050
+150. van Dam W, Howard M. Noise thresholds for higher-dimensional systems
+using the discrete Wigner function. Phys Rev A (2011) 83:032310. doi:10.
+1103/PhysRevA.83.032310
+151. Van den Nest M. Universal quantum computation with little entanglement.
+Phys Rev Lett (2013) 110:060504. doi:10.1103/PhysRevLett.110.060504
+
+100. Li B, Yu Z-H, Fei S-M. Geometry of quantum computation with qutrits. Sci
+Rep (2013a) 3:2594. doi:10.1038/srep02594
+101. Li HY, Wu CW, Liu WT, Chen PX, Li CZ. Fast quantum search algorithm for
+databases of arbitrary size and its implementation in a cavity QED system.
+Phys Lett (2011) 375:4249–54. doi:10.1016/j.physleta.2011.10.016
+102. Li W-D, Gu Y-J, Liu K, Lee Y-H, Zhang Y-Z. Efﬁcient universal quantum
+computation with auxiliary Hilbert space. Phys Rev A (2013b) 88:034303.
+doi:10.1103/PhysRevA.88.034303
+103. Liu Z, Fan H. Decay of multiqudit entanglement. Phys Rev A (2009) 79:
+064305. doi:10.1103/physreva.79.064305
+104. Loss D, DiVincenzo DP. Quantum computation with quantum dots. Phys Rev
+A (1998) 57:120–6. doi:10.1103/PhysRevA.57.120
+105. Low RA. Learning and testing algorithms for the Clifford group. Phys Rev A
+(2009) 80:052314. doi:10.1103/PhysRevA.80.052314
+106. Lu HH, Hu Z, Alshaykh MS, Moore AJ, Wang Y, Imany P, et al. Quantum
+phase estimation with time-frequency qudits in a single photon. Adv
+Quantum Tech (2019) 3:1900074. doi:10.1002/qute.201900074
+107. Lu H-H, Lukens JM, Peters NA, Odele OD, Leaird DE, Weiner AM, et al.
+Electro-optic frequency beam splitters and tritters for high-ﬁdelity photonic
+quantum inf. process. Phys Rev Lett (2018) 120:030502. doi:10.1103/
+physrevlett.120.030502
+108. Luo M, Wang X. Universal quantum computation with qudits. Sci China Phys
+Mech Astron (2014) 57:1712–7. doi:10.1007/s11433-014-5551-9
+109. Luo M-X, Chen X-B, Yang Y-X, Wang X. Geometry of quantum computation
+with qudits. Sci Rep (2014) 4:4044. doi:10.1038/srep04044
+110. Martinis JM, Geller MR. Fast adiabatic qubit gates using onlyσzcontrol. Phys
+Rev A (2014) 90:022307. doi:10.1103/PhysRevA.90.022307
+111. Hugh DM, Twamley J. Trapped-ion qutrit spin molecule quantum computer.
+New J Phys (2005) 7:174. doi:10.1088/1367-2630/7/1/174
+112. Mermin ND. From classical state swapping to quantum teleportation. Phys
+Rev A (2001) 65:012320. doi:10.1103/PhysRevA.65.012320
+113. Milburn GJ. Photons as qubits. Phys Scripta (2009) T137:014003. doi:10.
+1088/0031-8949/2009/t137/014003
+114. Mischuck B, Mølmer K. Qudit quantum computation in the Jaynes-Cummings
+model. Phys Rev A (2013) 87:022341. doi:10.1103/PhysRevA.87.022341
+115. Moreno-Pineda E, Godfrin C, Balestro F, Wernsdorfer W, Ruben M.
+Molecular spin qudits for quantum algorithms. Chem Soc Rev (2018) 47:
+501–13. doi:10.1039/C5CS00933B
+116. Moreno Pineda E, Komeda T, Katoh K, Yamashita M, Ruben M. Surface
+conﬁnement of TbPc2-SMMs: structural, electronic and magnetic properties.
+Dalton Trans (2016) 45:18417–33. doi:10.1039/C6DT03298B
+117. Morvan A, Ramasesh V, Blok M, Kreikebaum J, O’Brien K, Chen L, et al.
+Qutrit randomized benchmarking (2020) arXiv preprint arXiv:2008.09134.
+118. Muthukrishnan A, Stroud CR. Multivalued logic gates for quantum
+computation. Phys Rev A (2000) 62:052309. doi:10.1103/PhysRevA.62.
+052309
+119. Nagata K, Geurdes H, Patro SK, Heidari S, Farouk A, Nakamura T.
+Generalization of the Bernstein-Vazirani algorithm beyond qubit
+systems. Quantum Stud Math Found (2020) 7:17–21. doi:10.1007/
+s40509-019-00196-4
+120. Neumann P, Beck J, Steiner M, Rempp F, Fedder H, Hemmer PR, et al. Singleshot readout of a single nuclear spin. Science (2010) 329:542–4. doi:10.1126/
+science.1189075
+121. Nguyen DM, Kim S. Quantum key distribution protocol based on modiﬁed
+generalization of Deutsch-Jozsa algorithm in d-level quantum system. Int
+J Theor Phys (2019) 58:71–82. doi:10.1007/s10773-018-3910-4
+122. Nielsen MA. A geometric approach to quantum circuit lower bounds (2005)
+arXiv preprint quant-ph/0502070.
+123. Nielsen MA. Cluster-state quantum computation. Rep Math Phys (2006) 57:
+147–61. doi:10.1016/S0034-4877(06)80014-5
+124. Nielsen MA, Bremner MJ, Dodd JL, Childs AM, Dawson CM. Universal
+simulation of hamiltonian dynamics for quantum systems with ﬁnitedimensional state spaces. Phys Rev A (2002) 66:022317. doi:10.1103/
+PhysRevA.66.022317
+125. Nielsen MA, Chuang IL. Quantum computation and quantum information.
+10th ed. New York, NY: Cambridge University Press (2011)
+126. Nielsen MA, Dowling MR, Gu M, Doherty AC. Quantum computation as
+geometry. Science (2006) 311:1133–5. doi:10.1126/science.1121541
+
+Frontiers in Physics | www.frontiersin.org
+
+23
+
+November 2020 | Volume 8 | Article 589504
+
+Wang et al.
+
+Qudits and High-Dimensional Quantum Computing
+
+162. Zeng B, Chung H, Cross AW, Chuang IL. Local unitary versus local Clifford
+equivalence of stabilizer and graph states. Phys Rev A (2007) 75:032325.
+doi:10.1103/PhysRevA.75.032325
+163. Zhan X, Li J, Qin H, Bian Z-h, Xue P. Linear optical demonstration of
+quantum speed-up with a single qudit. Opt Express (2015) 23:18422–7.
+doi:10.1364/OE.23.018422
+164. Zhou DL, Zeng B, Xu Z, Sun CP. Quantum computation based ond-level
+cluster state. Phys Rev A (2003) 68:062303. doi:10.1103/PhysRevA.68.062303
+165. Zilic Z, Radecka K. Scaling and better approximating quantum Fourier
+transform by higher radices. IEEE Trans Comput (2007) 56:202–7. doi:10.
+1109/TC.2007.35
+166. Zobov VE, Ermilov AS. Implementation of a quantum adiabatic algorithm for
+factorization on two qudits. J Exp Theor Phys (2012) 114:923–32. doi:10.1134/
+S106377611205007X
+
+152. Vandersypen LMK, Steffen M, Breyta G, Yannoni CS, Sherwood MH,
+Chuang IL. Experimental realization of Shor’s quantum factoring
+algorithm using nuclear magnetic resonance. Nature (2001) 414:883.
+doi:10.1038/414883a
+153. Vlasov AY. Noncommutative tori and universal sets of nonbinary quantum
+gates. J Math Phys (2002) 43:2959–64. doi:10.1063/1.1476391
+154. Wang H, Kais S, Aspuru-Guzik A, Hoffmann MR. Quantum algorithm for
+obtaining the energy spectrum of molecular systems. Phys Chem Chem Phys
+(2008) 10:5388–93. doi:10.1039/B804804E
+155. Wang X. Continuous-variable and hybrid quantum gates. J Phys Math Gen
+(2001) 34:9577–84. doi:10.1088/0305-4470/34/44/316
+156. Watabe S, Seki Y, Kawabata S. Enhancing quantum annealing performance
+by a degenerate two-level system. Sci Rep (2020) 10:146. doi:10.1038/s41598019-56758-4
+157. Webb Z. The Clifford group forms a unitary 3-design. Quant Inf Comput
+(2016) 16:1379–400. doi:10.5555/3179439.3179447
+158. Wilmott CM. On swapping the states of two qudits. Int J Quant Inf (2011) 09:
+1511–7. doi:10.1142/S0219749911008143
+159. Wilmott CM, Wild PR. On a generalized quantum swap gate. Int J Quant Inf
+(2012) 10:1250034. doi:10.1142/S0219749912500347
+160. Zahedinejad E, Ghosh J, Sanders BC. High-ﬁdelity single-shot Toffoli gate via
+quantum control. Phys Rev Lett (2015) 114:200502. doi:10.1103/PhysRevLett.
+114.200502
+161. Zahedinejad E, Ghosh J, Sanders BC. Designing high-ﬁdelity single-shot
+three-qubit gates: a machine-learning approach. Phys Rev Appl (2016) 6:
+054005. doi:10.1103/PhysRevApplied.6.054005
+
+Frontiers in Physics | www.frontiersin.org
+
+Conﬂict of Interest: The authors declare that the research was conducted in the
+absence of any commercial or ﬁnancial relationships that could be construed as a
+potential conﬂict of interest.
+Copyright © 2020 Wang, Hu, Sanders and Kais. This is an open-access article
+distributed under the terms of the Creative Commons Attribution License (CC BY).
+The use, distribution or reproduction in other forums is permitted, provided the
+original author(s) and the copyright owner(s) are credited and that the original
+publication in this journal is cited, in accordance with accepted academic practice.
+No use, distribution or reproduction is permitted which does not comply with
+these terms.
+
+24
+
+November 2020 | Volume 8 | Article 589504
+
+
